@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:body>
+    <ui:composition template="/templates/contents.xhtml">
+        <ui:define name="body-contents">
+            <h:form id="formStudent">
+                <h:dataTable id="tableStudent" value="#{studentBean.allStudents}" var="student">
+                    <h:column>
+                        <f:facet name="header">ID</f:facet>
+                        <h:outputText value="#{student.id}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Student Name</f:facet>
+                        <h:outputText value="#{student.sname}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Password</f:facet>
+                        <h:outputText value="#{student.spassword}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Date of Birth</f:facet>
+                        <h:outputText value="#{student.dateOfBirth}">
+                            <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                        </h:outputText>
+                    </h:column>
+                    <h:column>
+                        <h:commandButton value="DETAIL" action="#{studentBean.getStudentDetail(student.id)}">
+                            <f:ajax render="@all"/>
+                        </h:commandButton>
+                    </h:column>
+
+                </h:dataTable>
+            </h:form>
+
+            <h:form id="formDetail" rendered="#{studentBean.showStudentsDetail}">
+                <h:panelGrid columns="2" cellspacing="20" border="1">
+                    <f:facet name="header">
+                        <h:outputText value="STUDENT's DETAIL"/>
+                    </f:facet>
+
+                    <h:outputText value="ID"/>
+                    <h:outputText value="#{studentDetail.id}"/>
+
+                    <h:outputText value="Name"/>
+                    <h:inputText id="name" value="#{studentDetail.sname}"/>
+
+                    <h:outputText value="Password"/>
+                    <h:inputText value="#{studentDetail.spassword}"/>
+
+                    <h:outputText value="Date of Birth"/>
+                    <h:inputText value="#{studentDetail.dateOfBirth}">
+                        <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                    </h:inputText>
+
+                    <f:facet name="footer">
+                        <h:commandButton value="Save" action="#{studentBean.updateStudent(studentDetail)}">
+                            <f:ajax execute="formDetail" render="@all"/>
+                        </h:commandButton>
+                        <h:commandButton value="Delete" action="#{studentBean.deleteStudent(studentDetail.id)}"
+                                         onclick="return confirm('Are you sure?')"/>
+                    </f:facet>
+                </h:panelGrid>
+            </h:form>
+
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

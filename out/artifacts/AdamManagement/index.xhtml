@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>ADAM Demo JSF</title>
+    <style type="text/css">
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</h:head>
+<h:body>
+    <h:form id="formStudent">
+        <h:dataTable id="tableStudent" value="#{studentBean.allStudents}" var="student">
+            <h:column>
+                <f:facet name="header">ID</f:facet>
+                <h:outputText value="#{student.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Student Name</f:facet>
+                <h:outputText value="#{student.sname}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Password</f:facet>
+                <h:outputText value="#{student.spassword}"/>
+            </h:column>
+        </h:dataTable>
+    </h:form>
+</h:body>
+</html>

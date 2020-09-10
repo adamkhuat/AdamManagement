@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>ADAM Demo JSF</title>
+    <style type="text/css">
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</h:head>
+<h:body>
+    <ui:composition template="/templates/common.xhtml">
+        <ui:define name="header">
+            <h2>HEADER</h2>
+        </ui:define>
+        <ui:define name="contents">
+            <ui:fragment rendered="#{controllerBean.viewId eq null ? true : false}">
+                <h:form id="naviForm">
+                    <h:commandButton value="Student Management" action="#{controllerBean.showStudentManagement}">
+                        <f:ajax render="@all"/>
+                    </h:commandButton>
+                    <h:commandButton value="Class Management" action="#{controllerBean.showClassManagement}">
+                        <f:ajax render="@all"/>
+                    </h:commandButton>
+                </h:form>
+            </ui:fragment>
+            <ui:fragment id="studentsManagement"
+                         rendered="#{controllerBean.viewId eq controllerBean.ID_STUDENT_MANAGEMENT}">
+                <ui:include src="students.xhtml"/>
+            </ui:fragment>
+            <ui:fragment id="classManagement"
+                         rendered="#{controllerBean.viewId eq controllerBean.ID_CLASS_MANAGEMENT}">
+                <ui:include src="clazz.xhtml"/>
+            </ui:fragment>
+
+<!--Stopppppppppppppp-->
+        </ui:define>
+        <ui:define name="footer">
+            <h:commandButton value="BACK TO HOMEPAGE" action="#{controllerBean.backToHomePage}">
+                <f:ajax render="@all"/>
+            </h:commandButton>
+        </ui:define>
+    </ui:composition>
+    <h1>TESSTY</h1>
+
+</h:body>
+</html>
+
+
