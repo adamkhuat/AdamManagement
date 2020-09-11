@@ -1,4 +1,4 @@
-package com.adam.repository;
+package com.adam.repository.student;
 
 import com.adam.model.Student;
 import com.adam.utils.JPAUtil;
@@ -10,7 +10,6 @@ import javax.persistence.Query;
 import java.io.Serializable;
 import java.util.List;
 
-@Named
 public class StudentRepositoryImpl implements StudentRepository, Serializable {
 
     EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();

@@ -1,4 +1,4 @@
-package com.adam.repository;
+package com.adam.repository.student;
 
 import com.adam.model.Student;
 

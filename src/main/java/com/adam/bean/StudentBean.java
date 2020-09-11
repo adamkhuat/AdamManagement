@@ -1,7 +1,7 @@
 package com.adam.bean;
 
 import com.adam.model.Student;
-import com.adam.repository.StudentRepository;
+import com.adam.repository.student.StudentRepository;
 
 import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;

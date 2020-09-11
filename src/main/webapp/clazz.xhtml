@@ -9,7 +9,21 @@
     <ui:composition template="/templates/contents.xhtml">
         <ui:define name="body-contents">
             <h:form id="formClass">
-                <h1>CLASSSSSSSSSSS</h1>
+                <h:dataTable id="tableClazz" value="#{clazzBean.allClazz}" var="clazz">
+                    <h:column>
+                        <f:facet name="header">ID</f:facet>
+                        <h:outputText value="#{clazz.id}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Class Name</f:facet>
+                        <h:outputText value="#{clazz.className}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Mornitor's Id</f:facet>
+                        <h:outputText value="#{clazz.monitorId}"/>
+                    </h:column>
+                </h:dataTable>
+
                 <h:commandButton value="test" action="#{controllerBean.hello}">
                     <f:ajax render="@all"/>
                 </h:commandButton>

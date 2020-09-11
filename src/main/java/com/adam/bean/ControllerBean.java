@@ -2,6 +2,7 @@ package com.adam.bean;
 
 import com.adam.constants.Constants;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;
 import javax.faces.context.FacesContext;
@@ -20,33 +21,30 @@ public class ControllerBean implements Serializable {
     @Inject
     private Conversation conversation;
 
+    @Inject
+    private StudentBean studentBean;
+
+    @Inject
+    private ClazzBean clazzBean;
+
 
     public void showStudentManagement() {
         this.viewId = ID_STUDENT_MANAGEMENT;
-        startConversation();
+        studentBean.startConversation();
     }
 
     public void showClassManagement() {
         this.viewId = ID_CLASS_MANAGEMENT;
-        startConversation();
+        clazzBean.startConversation();
     }
 
     public void backToHomePage() {
+        if (this.viewId.equals(ID_STUDENT_MANAGEMENT)) {
+            studentBean.endConversation();
+        } else if (this.viewId.equals(ID_CLASS_MANAGEMENT)) {
+            clazzBean.endConversation();
+        }
         this.viewId = null;
-        endConversation();
-    }
-
-
-    public void startConversation() {
-        if (FacesContext.getCurrentInstance().isPostback() && conversation.isTransient()) {
-            conversation.begin();
-        }
-    }
-
-    public void endConversation() {
-        if (!conversation.isTransient()) {
-            conversation.end();
-        }
     }
 
     public void hello() {

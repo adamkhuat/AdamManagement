@@ -8,7 +8,7 @@
 <h:body>
     <ui:composition template="/templates/contents.xhtml">
         <ui:define name="body-contents">
-            <h:form id="formStudent">
+            <h:form id="formStudent" rendered="#{not studentBean.showStudentsDetail}">
                 <h:dataTable id="tableStudent" value="#{studentBean.allStudents}" var="student">
                     <h:column>
                         <f:facet name="header">ID</f:facet>
