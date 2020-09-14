@@ -6,6 +6,7 @@ import com.adam.utils.JPAUtil;
 
 import javax.inject.Named;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 import java.io.Serializable;
 import java.util.List;
@@ -16,32 +17,43 @@ public class ClazzRepositoryImpl implements ClazzRepository, Serializable {
 
     @Override
     public List<Clazz> getAllClazz() {
-//        Query query = entityManager.createQuery("SELECT cl FROM Clazz cl");
-//        List<Clazz> clazzList = query.getResultList();
-//        return clazzList;
-
-        Query query = entityManager.createNamedQuery("get all class");
+        Query query = entityManager.createQuery("SELECT c FROM Clazz c");
         List<Clazz> clazzList = query.getResultList();
         return clazzList;
+
+//        Query query = entityManager.createNamedQuery("getAllClazz");
+//        List<Clazz> clazzList = query.getResultList();
+//        return clazzList;
     }
 
     @Override
-    public void create() {
-
+    public void save(Clazz clazz) {
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+        entityManager.persist(clazz);
+        transaction.commit();
     }
 
     @Override
     public void update(Clazz clazz) {
-
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+        entityManager.merge(clazz);
+        transaction.commit();
     }
 
     @Override
     public void delete(int clazzId) {
-
+        Clazz clazz = findClazzById(clazzId);
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+        entityManager.remove(clazz);
+        transaction.commit();
     }
 
     @Override
     public Clazz findClazzById(int clazzId) {
-        return null;
+        Clazz clazz = entityManager.find(Clazz.class, clazzId);
+        return clazz;
     }
 }

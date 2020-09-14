@@ -4,17 +4,16 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "clazz")
-@NamedQuery(query = "SELECT c FROM Clazz c", name = "get all class")
 public class Clazz {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column
+    @Column(name = "className")
     private String className;
 
-    @Column
+    @Column(name = "monitorId")
     private int monitorId;
 
     public int getId() {

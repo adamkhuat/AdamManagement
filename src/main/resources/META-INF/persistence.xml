@@ -6,6 +6,7 @@
     <persistence-unit name="AdamManagement" transaction-type="RESOURCE_LOCAL">
 
         <class>com.adam.model.Student</class>
+        <class>com.adam.model.Clazz</class>
 <!--        <class>com.adam.model.StudentClass</class>-->
 
         <properties>

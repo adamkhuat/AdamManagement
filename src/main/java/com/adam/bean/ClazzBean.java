@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 @Named
 @ConversationScoped
@@ -33,8 +34,28 @@ public class ClazzBean implements Serializable {
         }
     }
 
-    public List<Clazz> getAllClazz(){
+    public List<Clazz> getAllClazz() {
+        List<Clazz> list = repo.getAllClazz();
+        System.out.println("CLASS SIZE" + list.size());
         return repo.getAllClazz();
+    }
+
+    public void createClazz() {
+        Clazz clazz = new Clazz();
+        Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+        map.put("newClazz", clazz);
+    }
+
+    public void save(Clazz clazz) {
+        repo.save(clazz);
+    }
+
+    public void update(Clazz clazz) {
+        repo.update(clazz);
+    }
+
+    public void delete(int id) {
+        repo.delete(id);
     }
 
 }

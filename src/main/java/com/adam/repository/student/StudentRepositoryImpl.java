@@ -3,7 +3,6 @@ package com.adam.repository.student;
 import com.adam.model.Student;
 import com.adam.utils.JPAUtil;
 
-import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
