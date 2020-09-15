@@ -1,4 +1,4 @@
-package com.adam.validator;
+package com.adam.validator.student;
 
 
 import javax.faces.application.FacesMessage;
@@ -8,20 +8,21 @@ import javax.faces.validator.FacesValidator;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
-@FacesValidator
+@FacesValidator(value = "studentsNameValidator")
 public class StudentsNameValidator implements Validator {
     @Override
     public void validate(FacesContext facesContext, UIComponent uiComponent, Object o) throws ValidatorException {
-        String sname = String.valueOf(o).trim();
+        String sname = o.toString().trim();
         FacesMessage message = new FacesMessage();
         message.setSeverity(FacesMessage.SEVERITY_ERROR);
 
         if (sname.length() <= 0) {
-            message.setDetail("Name is empty. Please enter student's name");
+            message.setSummary("Name is empty. Please enter student's name");
+            throw new ValidatorException(message);
         } else if (sname.length() > 20) {
-            message.setDetail("Name shouldn't longer than 20 symbols");
+            message.setSummary("Name shouldn't longer than 20 symbols");
+            throw new ValidatorException(message);
         }
-        message.setSeverity(FacesMessage.SEVERITY_ERROR);
-        throw new ValidatorException(message);
+
     }
 }

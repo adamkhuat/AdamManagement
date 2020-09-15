@@ -6,6 +6,9 @@ import com.adam.repository.student.StudentRepository;
 import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AbortProcessingException;
+import javax.faces.event.ValueChangeEvent;
+import javax.faces.event.ValueChangeListener;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
@@ -48,31 +51,41 @@ public class StudentBean implements Serializable {
         return studentRepository.getAllStudents();
     }
 
-    public void newStudent() {
+    public String newStudent() {
         Student student = new Student();
-        Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
-        map.put("newStudent", student);
+        save(student);
+        getStudentDetail(student.getId());
+        this.showStudentsDetail = true;
+        return "/index?faces-redirect = true";
     }
 
     public void save(Student student) {
         studentRepository.save(student);
     }
 
-    public void getStudentDetail(int id) {
+    public String getStudentDetail(int id) {
         Student student = studentRepository.findById(id);
         Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
         map.put("studentDetail", student);
         this.showStudentsDetail = true;
+        return "/index?faces-redirect = true";
     }
 
-    public void updateStudent(Student student) {
+    public String updateStudent(Student student) {
         studentRepository.edit(student);
         showStudentsDetail = false;
+        return "/index?faces-redirect = true";
     }
 
 
     public void deleteStudent(int id) {
         studentRepository.delete(id);
+        backToListStudent();
+    }
+
+    public String backToListStudent() {
+        this.showStudentsDetail = false;
+        return "/index?faces-redirect = true";
     }
 
 

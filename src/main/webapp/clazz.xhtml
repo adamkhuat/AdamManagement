@@ -8,26 +8,60 @@
 <h:body>
     <ui:composition template="/templates/contents.xhtml">
         <ui:define name="body-contents">
-            <h:form id="formClass">
+            <h:form id="formClass" rendered="#{!clazzBean.showClazzDetail}">
+                <h:commandButton value="NEW" action="#{clazzBean.createClazz}"/>
                 <h:dataTable id="tableClazz" value="#{clazzBean.allClazz}" var="clazz">
                     <h:column>
                         <f:facet name="header">ID</f:facet>
-                        <h:outputText value="#{clazz.id}"/>
+                        <h:commandLink value="#{clazz.id}" action="#{clazzBean.getClazzDetail(clazz.id)}"
+                                       style="text-decoration: none; color: black"/>
                     </h:column>
                     <h:column>
                         <f:facet name="header">Class Name</f:facet>
-                        <h:outputText value="#{clazz.className}"/>
+                        <h:commandLink value="#{clazz.className}" action="#{clazzBean.getClazzDetail(clazz.id)}"
+                                       style="text-decoration: none; color: black"/>
                     </h:column>
                     <h:column>
                         <f:facet name="header">Mornitor's Id</f:facet>
-                        <h:outputText value="#{clazz.monitorId}"/>
+                        <h:commandLink value="#{clazz.monitorId}" action="#{clazzBean.getClazzDetail(clazz.id)}"
+                                       style="text-decoration: none; color: black"/>
                     </h:column>
                 </h:dataTable>
-
-                <h:commandButton value="test" action="#{controllerBean.hello}">
-                    <f:ajax render="@all"/>
-                </h:commandButton>
             </h:form>
+
+            <h:form id="formClazzDetail" rendered="#{clazzBean.showClazzDetail}">
+                <h:panelGrid columns="2" border="1" cellspacing="20">
+
+                    <f:facet name="header">
+                        <h:outputText value="Class's DETAIL"/>
+                    </f:facet>
+
+                    <h:outputText value="ID"/>
+                    <h:outputText value="#{clazzDetail.id}"/>
+
+                    <h:outputText value="Name"/>
+                    <h:inputText value="#{clazzDetail.className}">
+                        <f:ajax event="change" execute="@this" render="formClazzDetail"
+                                listener="#{clazzBean.update(clazzDetail)}"/>
+                    </h:inputText>
+
+                    <h:outputText value="Monitor's ID"/>
+                    <h:inputText value="#{clazzDetail.monitorId}">
+                        <f:ajax event="change" execute="@this" render="formClazzDetail"
+                                listener="#{clazzBean.update(clazzDetail)}"/>
+                    </h:inputText>
+
+                    <f:facet name="footer">
+                        <h:commandButton value="Delete" action="#{clazzBean.delete(clazzDetail.id)}"
+                                         onclick="return confirm('Are you sure?')" immediate="true"/>
+
+                        <h:commandButton value="Back" action="#{clazzBean.backToClazzList}"/>
+                        <h:messages layout="formClazzDetail" errorStyle="color: red"/>
+                    </f:facet>
+
+                </h:panelGrid>
+            </h:form>
+
         </ui:define>
     </ui:composition>
 </h:body>

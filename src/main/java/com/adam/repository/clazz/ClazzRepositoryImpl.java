@@ -1,10 +1,8 @@
 package com.adam.repository.clazz;
 
 import com.adam.model.Clazz;
-import com.adam.model.Student;
 import com.adam.utils.JPAUtil;
 
-import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
@@ -17,13 +15,9 @@ public class ClazzRepositoryImpl implements ClazzRepository, Serializable {
 
     @Override
     public List<Clazz> getAllClazz() {
-        Query query = entityManager.createQuery("SELECT c FROM Clazz c");
+        Query query = entityManager.createNamedQuery("getAllClazz");
         List<Clazz> clazzList = query.getResultList();
         return clazzList;
-
-//        Query query = entityManager.createNamedQuery("getAllClazz");
-//        List<Clazz> clazzList = query.getResultList();
-//        return clazzList;
     }
 
     @Override
@@ -36,10 +30,9 @@ public class ClazzRepositoryImpl implements ClazzRepository, Serializable {
 
     @Override
     public void update(Clazz clazz) {
-        EntityTransaction transaction = entityManager.getTransaction();
-        transaction.begin();
+        entityManager.getTransaction().begin();
         entityManager.merge(clazz);
-        transaction.commit();
+        entityManager.getTransaction().commit();
     }
 
     @Override

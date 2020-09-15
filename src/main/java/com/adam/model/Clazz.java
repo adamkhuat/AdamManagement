@@ -4,6 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "clazz")
+@NamedQuery(query = "SELECT c FROM Clazz c", name = "getAllClazz")
 public class Clazz {
 
     @Id
@@ -48,4 +49,5 @@ public class Clazz {
                 ", monitorId=" + monitorId +
                 '}';
     }
+
 }

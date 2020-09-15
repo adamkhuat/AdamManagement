@@ -16,6 +16,16 @@ import java.util.Map;
 @ConversationScoped
 public class ClazzBean implements Serializable {
 
+    private boolean showClazzDetail = false;
+
+    public boolean isShowClazzDetail() {
+        return showClazzDetail;
+    }
+
+    public void setShowClazzDetail(boolean showClazzDetail) {
+        this.showClazzDetail = showClazzDetail;
+    }
+
     @Inject
     private ClazzRepository repo;
 
@@ -42,8 +52,9 @@ public class ClazzBean implements Serializable {
 
     public void createClazz() {
         Clazz clazz = new Clazz();
-        Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
-        map.put("newClazz", clazz);
+        save(clazz);
+        getClazzDetail(clazz.getId());
+        this.setShowClazzDetail(true);
     }
 
     public void save(Clazz clazz) {
@@ -52,10 +63,24 @@ public class ClazzBean implements Serializable {
 
     public void update(Clazz clazz) {
         repo.update(clazz);
+        this.setShowClazzDetail(false);
     }
 
     public void delete(int id) {
         repo.delete(id);
     }
+
+    public Clazz getClazzDetail(int id) {
+        Clazz clazz = repo.findClazzById(id);
+        Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+        map.put("clazzDetail", clazz);
+        this.setShowClazzDetail(true);
+        return clazz;
+    }
+
+    public void backToClazzList() {
+        this.setShowClazzDetail(false);
+    }
+
 
 }

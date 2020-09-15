@@ -38,17 +38,14 @@ public class ControllerBean implements Serializable {
         clazzBean.startConversation();
     }
 
-    public void backToHomePage() {
+    public String backToHomePage() {
         if (this.viewId.equals(ID_STUDENT_MANAGEMENT)) {
             studentBean.endConversation();
         } else if (this.viewId.equals(ID_CLASS_MANAGEMENT)) {
             clazzBean.endConversation();
         }
         this.viewId = null;
-    }
-
-    public void hello() {
-        System.out.println("Hello");
+        return "/index?faces-redirect = true";
     }
 
     public String getID_CLASS_MANAGEMENT() {
