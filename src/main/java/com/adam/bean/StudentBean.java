@@ -51,30 +51,27 @@ public class StudentBean implements Serializable {
         return studentRepository.getAllStudents();
     }
 
-    public String newStudent() {
+    public void newStudent() {
         Student student = new Student();
         save(student);
         getStudentDetail(student.getId());
         this.showStudentsDetail = true;
-        return "/index?faces-redirect = true";
     }
 
     public void save(Student student) {
         studentRepository.save(student);
     }
 
-    public String getStudentDetail(int id) {
+    public void getStudentDetail(int id) {
         Student student = studentRepository.findById(id);
         Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
         map.put("studentDetail", student);
         this.showStudentsDetail = true;
-        return "/index?faces-redirect = true";
     }
 
-    public String updateStudent(Student student) {
+    public void updateStudent(Student student) {
         studentRepository.edit(student);
         showStudentsDetail = false;
-        return "/index?faces-redirect = true";
     }
 
 
@@ -83,10 +80,7 @@ public class StudentBean implements Serializable {
         backToListStudent();
     }
 
-    public String backToListStudent() {
+    public void backToListStudent() {
         this.showStudentsDetail = false;
-        return "/index?faces-redirect = true";
     }
-
-
 }

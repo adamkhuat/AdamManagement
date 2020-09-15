@@ -9,7 +9,9 @@
     <ui:composition template="/templates/contents.xhtml">
         <ui:define name="body-contents">
             <h:form id="formStudent" rendered="#{not studentBean.showStudentsDetail}">
-                <h:commandButton value="NEW" action="#{studentBean.newStudent}"/>
+                <h:commandButton value="NEW" action="#{studentBean.newStudent}">
+                    <f:ajax render="@all"/>
+                </h:commandButton>
                 <h:dataTable id="tableStudent" value="#{studentBean.allStudents}" var="student">
                     <h:column>
                         <f:facet name="header">ID</f:facet>
@@ -21,12 +23,16 @@
                     <h:column>
                         <f:facet name="header">Student Name</f:facet>
                         <h:commandLink value="#{student.sname}" action="#{studentBean.getStudentDetail(student.id)}"
-                                       style="text-decoration: none; color: black"/>
+                                       style="text-decoration: none; color: black">
+                            <f:ajax render="@all"/>
+                        </h:commandLink>
                     </h:column>
                     <h:column>
                         <f:facet name="header">Password</f:facet>
                         <h:commandLink value="#{student.spassword}" action="#{studentBean.getStudentDetail(student.id)}"
-                                       style="text-decoration: none; color: black"/>
+                                       style="text-decoration: none; color: black">
+                            <f:ajax render="@all"/>
+                        </h:commandLink>
                     </h:column>
                     <h:column>
                         <f:facet name="header">Date of Birth</f:facet>
@@ -35,6 +41,7 @@
                             <h:outputText value="#{student.dateOfBirth}">
                                 <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
                             </h:outputText>
+                            <f:ajax render="@all"/>
                         </h:commandLink>
                     </h:column>
                 </h:dataTable>
@@ -51,29 +58,30 @@
 
                     <h:outputText value="Name"/>
                     <h:inputText id="name" value="#{studentDetail.sname}" validator="studentsNameValidator">
-                        <f:ajax event="change" execute="@this" render="formDetail"
+                        <f:ajax event="change" execute="@all"
                                 listener="#{studentBean.updateStudent(studentDetail)}"/>
                     </h:inputText>
 
                     <h:outputText value="Password"/>
                     <h:inputText value="#{studentDetail.spassword}" validator="studentPasswordValidator">
-                        <f:ajax event="change" execute="@this" render="formDetail"
+                        <f:ajax event="change" execute="@all"
                                 listener="#{studentBean.updateStudent(studentDetail)}"/>
                     </h:inputText>
 
                     <h:outputText value="Date of Birth"/>
                     <h:inputText value="#{studentDetail.dateOfBirth}">
-                        <f:convertDateTime type="date" pattern="dd-MM-yyyy">
-                            <f:ajax event="change" execute="@this" render="formDetail"
-                                    listener="#{studentBean.updateStudent(studentDetail)}"/>
-                        </f:convertDateTime>
+                        <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                        <f:ajax event="change" execute="@all" render="formDetail"
+                                listener="#{studentBean.updateStudent(studentDetail)}"/>
                     </h:inputText>
 
                     <f:facet name="footer">
                         <h:commandButton value="Delete" action="#{studentBean.deleteStudent(studentDetail.id)}"
                                          onclick="return confirm('Are you sure?')" immediate="true"/>
 
-                        <h:commandButton value="Back" action="#{studentBean.backToListStudent}"/>
+                        <h:commandButton value="Back" action="#{studentBean.backToListStudent}">
+                            <f:ajax render="@all"/>
+                        </h:commandButton>
                         <h:messages layout="formDetail" errorStyle="color: red"/>
                     </f:facet>
                 </h:panelGrid>
