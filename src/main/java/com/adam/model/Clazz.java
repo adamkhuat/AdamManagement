@@ -1,6 +1,7 @@
 package com.adam.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "clazz")
@@ -14,8 +15,12 @@ public class Clazz {
     @Column(name = "className")
     private String className;
 
-    @Column(name = "monitorId")
-    private int monitorId;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "monitorId")
+    private Student monitor;
+
+    @OneToMany(mappedBy = "clazzId", cascade = CascadeType.ALL)
+    private List<Student> listStudent;
 
     public int getId() {
         return id;
@@ -33,21 +38,19 @@ public class Clazz {
         this.className = className;
     }
 
-    public int getMonitorId() {
-        return monitorId;
+    public Student getMonitor() {
+        return monitor;
     }
 
-    public void setMonitorId(int monitorId) {
-        this.monitorId = monitorId;
+    public void setMonitor(Student monitor) {
+        this.monitor = monitor;
     }
 
-    @Override
-    public String toString() {
-        return "Clazz{" +
-                "id=" + id +
-                ", className='" + className + '\'' +
-                ", monitorId=" + monitorId +
-                '}';
+    public List<Student> getListStudent() {
+        return listStudent;
     }
 
+    public void setListStudent(List<Student> listStudent) {
+        this.listStudent = listStudent;
+    }
 }

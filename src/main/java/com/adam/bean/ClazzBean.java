@@ -1,7 +1,10 @@
 package com.adam.bean;
 
 import com.adam.model.Clazz;
+import com.adam.model.Student;
+import com.adam.model.StudentClass;
 import com.adam.repository.clazz.ClazzRepository;
+import com.adam.repository.studentClazz.StudentClazzRepository;
 
 import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;
@@ -28,6 +31,9 @@ public class ClazzBean implements Serializable {
 
     @Inject
     private ClazzRepository repo;
+
+    @Inject
+    private StudentClazzRepository studentClazzRepository;
 
     @Inject
     private Conversation conversation;
@@ -68,6 +74,7 @@ public class ClazzBean implements Serializable {
 
     public void delete(int id) {
         repo.delete(id);
+        this.setShowClazzDetail(false);
     }
 
     public Clazz getClazzDetail(int id) {
@@ -82,5 +89,21 @@ public class ClazzBean implements Serializable {
         this.setShowClazzDetail(false);
     }
 
+    public List<Student> getStudentList(int clazzId) {
+        return studentClazzRepository.getListStudent(clazzId);
+    }
+
+    public void createStudentClazz(){
+        StudentClass studentClass = new StudentClass();
+        studentClazzRepository.save(studentClass);
+        getStudentClazzDetail(studentClass.getId());
+    }
+
+    public StudentClass getStudentClazzDetail(int id){
+        StudentClass studentClass = studentClazzRepository.findStudentInTheClassById(id);
+        Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+        sessionMap.put("StudentClazzDetail", studentClass);
+        return studentClass;
+    }
 
 }

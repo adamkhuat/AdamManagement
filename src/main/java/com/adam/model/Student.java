@@ -15,7 +15,7 @@ public class Student {
     private String sname;
 
     @Column
-    private String spassword;
+    private String email;
 
     @Column
     private Date dateOfBirth;
@@ -36,12 +36,12 @@ public class Student {
         this.sname = sname;
     }
 
-    public String getSpassword() {
-        return spassword;
+    public String getEmail() {
+        return email;
     }
 
-    public void setSpassword(String spassword) {
-        this.spassword = spassword;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Date getDateOfBirth() {
@@ -57,10 +57,8 @@ public class Student {
         return "Student{" +
                 "id=" + id +
                 ", sname='" + sname + '\'' +
-                ", spassword='" + spassword + '\'' +
+                ", email='" + email + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
                 '}';
     }
-
-    //11/09/2020
-
 }

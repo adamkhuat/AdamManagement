@@ -4,7 +4,6 @@ import com.adam.model.Student;
 import com.adam.utils.JPAUtil;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 import java.io.Serializable;
 import java.util.List;
@@ -14,18 +13,27 @@ public class StudentRepositoryImpl implements StudentRepository, Serializable {
     EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
     @Override
-    public void save(Student student) {
-        EntityTransaction transaction = entityManager.getTransaction();
-        transaction.begin();
-        entityManager.persist(student);
-        transaction.commit();
+    public boolean save(Student student) {
+        try {
+            entityManager.getTransaction().begin();
+            entityManager.persist(student);
+            entityManager.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
-    public void edit(Student student) {
-        entityManager.getTransaction().begin();
-        entityManager.merge(student);
-        entityManager.getTransaction().commit();
+    public boolean edit(Student student) {
+        try {
+            entityManager.getTransaction().begin();
+            entityManager.merge(student);
+            entityManager.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
@@ -35,12 +43,16 @@ public class StudentRepositoryImpl implements StudentRepository, Serializable {
     }
 
     @Override
-    public void delete(int id) {
-        Student student = findById(id);
-        EntityTransaction transaction = entityManager.getTransaction();
-        transaction.begin();
-        entityManager.remove(student);
-        transaction.commit();
+    public boolean delete(int id) {
+        try {
+            Student student = findById(id);
+            entityManager.getTransaction().begin();
+            entityManager.remove(student);
+            entityManager.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override

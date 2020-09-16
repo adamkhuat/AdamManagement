@@ -5,9 +5,14 @@ import com.adam.model.Student;
 import java.util.List;
 
 public interface StudentRepository {
-    void save(Student student);
-    void edit(Student student);
+
+    boolean save(Student student);
+
+    boolean edit(Student student);
+
     Student findById(int id);
-    void delete(int id);
+
+    boolean delete(int id);
+
     List<Student> getAllStudents();
 }

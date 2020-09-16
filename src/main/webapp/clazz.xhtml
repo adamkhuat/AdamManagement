@@ -4,6 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <h:body>
     <ui:composition template="/templates/contents.xhtml">
@@ -14,23 +15,29 @@
                     <h:column>
                         <f:facet name="header">ID</f:facet>
                         <h:commandLink value="#{clazz.id}" action="#{clazzBean.getClazzDetail(clazz.id)}"
-                                       style="text-decoration: none; color: black"/>
+                                       style="text-decoration: none; color: black">
+                            <f:ajax render="@all"/>
+                        </h:commandLink>
                     </h:column>
                     <h:column>
                         <f:facet name="header">Class Name</f:facet>
                         <h:commandLink value="#{clazz.className}" action="#{clazzBean.getClazzDetail(clazz.id)}"
-                                       style="text-decoration: none; color: black"/>
+                                       style="text-decoration: none; color: black">
+                            <f:ajax render="@all"/>
+                        </h:commandLink>
                     </h:column>
                     <h:column>
                         <f:facet name="header">Mornitor's Id</f:facet>
                         <h:commandLink value="#{clazz.monitorId}" action="#{clazzBean.getClazzDetail(clazz.id)}"
-                                       style="text-decoration: none; color: black"/>
+                                       style="text-decoration: none; color: black">
+                            <f:ajax render="@all"/>
+                        </h:commandLink>
                     </h:column>
                 </h:dataTable>
             </h:form>
 
             <h:form id="formClazzDetail" rendered="#{clazzBean.showClazzDetail}">
-                <h:panelGrid columns="2" border="1" cellspacing="20">
+                <h:panelGrid columns="3" border="1" cellspacing="20">
 
                     <f:facet name="header">
                         <h:outputText value="Class's DETAIL"/>
@@ -38,20 +45,25 @@
 
                     <h:outputText value="ID"/>
                     <h:outputText value="#{clazzDetail.id}"/>
+                    <h:outputText/>
 
                     <h:outputText value="Name"/>
-                    <h:inputText value="#{clazzDetail.className}">
-                        <f:ajax event="change" execute="@this" render="formClazzDetail"
+                    <h:inputText value="#{clazzDetail.className}" onkeypress="return event.keyCode !== 13">
+                        <f:ajax event="change" execute="@this"
                                 listener="#{clazzBean.update(clazzDetail)}"/>
                     </h:inputText>
+                    <h:outputText/>
 
                     <h:outputText value="Monitor's ID"/>
-                    <h:inputText value="#{clazzDetail.monitorId}">
-                        <f:ajax event="change" execute="@this" render="formClazzDetail"
-                                listener="#{clazzBean.update(clazzDetail)}"/>
+                    <h:inputText value="#{clazzDetail.monitorId}" onkeypress="return event.keyCode !== 13">
+                        <f:ajax event="change" execute="@this" listener="#{clazzBean.update(clazzDetail)}"
+                                render="monitorsName"/>
                     </h:inputText>
+                    <h:outputText id="monitorsName"
+                                  value="#{studentBean.findStudentById(clazzDetail.monitorId).sname}"/>
 
                     <f:facet name="footer">
+                        <h:commandButton value="Add" action="#{clazzBean.addStudentToTheClass()}"/>
                         <h:commandButton value="Delete" action="#{clazzBean.delete(clazzDetail.id)}"
                                          onclick="return confirm('Are you sure?')" immediate="true"/>
 
@@ -59,6 +71,42 @@
                         <h:messages layout="formClazzDetail" errorStyle="color: red"/>
                     </f:facet>
 
+                </h:panelGrid>
+            </h:form>
+
+            <h:form id="formStudentsClass" rendered="#{clazzBean.showClazzDetail}">
+                <h:dataTable id="tableStudentsClass" value="#{clazzBean.getStudentList(clazzDetail.id)}" var="student">
+                    <h:column>
+                        <f:facet name="header">ID</f:facet>
+                        <h:outputText value="#{student.id}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Name</f:facet>
+                        <h:outputText value="#{student.sname}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Date Of Birth</f:facet>
+                        <h:outputText value="#{student.dateOfBirth}">
+                            <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                        </h:outputText>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+
+            <h:form id="formAddStudentClazz" rendered="#{clazzBean.showClazzDetail}">
+                <h:panelGrid columns="2" cellspacing="20">
+                    <f:facet name="header">Add Student</f:facet>
+
+                    <h:outputText value="ID"/>
+                    <h:inputText id="studentAddId" value="#{studentAdd.id}" p:placeholder="ID">
+                        <f:ajax event="change" execute="@this" render="@all"/>
+                    </h:inputText>
+
+                    <h:outputText id="studentAddName" value="Name"/>
+                    <h:outputText value="#{studentAdd.sname}"/>
+
+                    <h:outputText value="Date of Birth"/>
+                    <h:outputText value="#{studentAdd.dateOfBirth}"/>
                 </h:panelGrid>
             </h:form>
 

@@ -57,21 +57,23 @@
                     <h:outputText value="#{studentDetail.id}"/>
 
                     <h:outputText value="Name"/>
-                    <h:inputText id="name" value="#{studentDetail.sname}" validator="studentsNameValidator">
+                    <h:inputText id="name" value="#{studentDetail.sname}" validator="studentsNameValidator"
+                                 onkeypress="return event.keyCode !== 13">
                         <f:ajax event="change" execute="@all"
                                 listener="#{studentBean.updateStudent(studentDetail)}"/>
                     </h:inputText>
 
                     <h:outputText value="Password"/>
-                    <h:inputText value="#{studentDetail.spassword}" validator="studentPasswordValidator">
+                    <h:inputText value="#{studentDetail.spassword}" validator="studentPasswordValidator"
+                                 onkeypress="return event.keyCode !== 13">
                         <f:ajax event="change" execute="@all"
                                 listener="#{studentBean.updateStudent(studentDetail)}"/>
                     </h:inputText>
 
                     <h:outputText value="Date of Birth"/>
-                    <h:inputText value="#{studentDetail.dateOfBirth}">
+                    <h:inputText value="#{studentDetail.dateOfBirth}" onkeypress="return event.keyCode !== 13">
                         <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
-                        <f:ajax event="change" execute="@all" render="formDetail"
+                        <f:ajax event="change" execute="@all"
                                 listener="#{studentBean.updateStudent(studentDetail)}"/>
                     </h:inputText>
 

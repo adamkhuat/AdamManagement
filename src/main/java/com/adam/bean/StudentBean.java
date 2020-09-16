@@ -80,6 +80,10 @@ public class StudentBean implements Serializable {
         backToListStudent();
     }
 
+    public Student findStudentById(int id){
+        return studentRepository.findById(id);
+    }
+
     public void backToListStudent() {
         this.showStudentsDetail = false;
     }

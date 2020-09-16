@@ -10,11 +10,13 @@ public class StudentClass {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column
-    private int clazzId;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "clazzId")
+    private Clazz clazz;
 
-    @Column
-    private int studentId;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "studentId")
+    private Student student;
 
     public int getId() {
         return id;
@@ -24,28 +26,19 @@ public class StudentClass {
         this.id = id;
     }
 
-    public int getClazzId() {
-        return clazzId;
+    public Clazz getClazz() {
+        return clazz;
     }
 
-    public void setClazzId(int clazzId) {
-        this.clazzId = clazzId;
+    public void setClazz(Clazz clazz) {
+        this.clazz = clazz;
     }
 
-    public int getStudentId() {
-        return studentId;
+    public Student getStudent() {
+        return student;
     }
 
-    public void setStudentId(int studentId) {
-        this.studentId = studentId;
-    }
-
-    @Override
-    public String toString() {
-        return "StudentClass{" +
-                "id=" + id +
-                ", clazzId=" + clazzId +
-                ", studentId=" + studentId +
-                '}';
+    public void setStudent(Student student) {
+        this.student = student;
     }
 }

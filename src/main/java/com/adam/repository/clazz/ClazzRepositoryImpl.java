@@ -1,10 +1,10 @@
 package com.adam.repository.clazz;
 
 import com.adam.model.Clazz;
+import com.adam.model.Student;
 import com.adam.utils.JPAUtil;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 import java.io.Serializable;
 import java.util.List;
@@ -21,27 +21,40 @@ public class ClazzRepositoryImpl implements ClazzRepository, Serializable {
     }
 
     @Override
-    public void save(Clazz clazz) {
-        EntityTransaction transaction = entityManager.getTransaction();
-        transaction.begin();
-        entityManager.persist(clazz);
-        transaction.commit();
+    public boolean save(Clazz clazz) {
+        try {
+            entityManager.getTransaction().begin();
+            entityManager.persist(clazz);
+            entityManager.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
-    public void update(Clazz clazz) {
-        entityManager.getTransaction().begin();
-        entityManager.merge(clazz);
-        entityManager.getTransaction().commit();
+    public boolean update(Clazz clazz) {
+        try {
+            entityManager.getTransaction().begin();
+            entityManager.merge(clazz);
+            entityManager.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
-    public void delete(int clazzId) {
-        Clazz clazz = findClazzById(clazzId);
-        EntityTransaction transaction = entityManager.getTransaction();
-        transaction.begin();
-        entityManager.remove(clazz);
-        transaction.commit();
+    public boolean delete(int clazzId) {
+        try {
+            Clazz clazz = findClazzById(clazzId);
+            entityManager.getTransaction().begin();
+            entityManager.remove(clazz);
+            entityManager.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
@@ -49,4 +62,11 @@ public class ClazzRepositoryImpl implements ClazzRepository, Serializable {
         Clazz clazz = entityManager.find(Clazz.class, clazzId);
         return clazz;
     }
+
+    @Override
+    public List<Student> getListStudentByClazzId(int clazzId) {
+        Query query = entityManager.createQuery("");
+        return null;
+    }
+
 }
