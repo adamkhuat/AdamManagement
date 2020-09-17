@@ -1,25 +1,50 @@
 package com.adam.bean;
 
+import com.adam.constants.Constants;
 import com.adam.model.Student;
 import com.adam.repository.student.StudentRepository;
 
-import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.event.AbortProcessingException;
-import javax.faces.event.ValueChangeEvent;
-import javax.faces.event.ValueChangeListener;
+import javax.faces.validator.ValidatorException;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 @Named
 @ConversationScoped
 public class StudentBean implements Serializable {
 
     private boolean showStudentsDetail = false;
+    private final String ID_DETAIL_STUDENT = Constants.SHOW_STUDENT_DETAIL;
+
+    public String getID_DETAIL_STUDENT() {
+        return ID_DETAIL_STUDENT;
+    }
+
+    private String view_ID = "";
+
+
+    public Student getStudent_instance() {
+        return student_instance;
+    }
+
+    public String getView_ID() {
+        return view_ID;
+    }
+
+    public void setView_ID(String view_ID) {
+        this.view_ID = view_ID;
+    }
+
+    public void setStudent_instance(Student student_instance) {
+        this.student_instance = student_instance;
+    }
+
+    private Student student_instance;
 
     public boolean isShowStudentsDetail() {
         return showStudentsDetail;
@@ -31,21 +56,6 @@ public class StudentBean implements Serializable {
 
     @Inject
     private StudentRepository studentRepository;
-
-    @Inject
-    private Conversation conversation;
-
-    public void startConversation() {
-        if (FacesContext.getCurrentInstance().isPostback() && conversation.isTransient()) {
-            conversation.begin();
-        }
-    }
-
-    public void endConversation() {
-        if (!conversation.isTransient()) {
-            conversation.end();
-        }
-    }
 
     public List<Student> getAllStudents() {
         return studentRepository.getAllStudents();
@@ -62,11 +72,11 @@ public class StudentBean implements Serializable {
         studentRepository.save(student);
     }
 
-    public void getStudentDetail(int id) {
-        Student student = studentRepository.findById(id);
-        Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
-        map.put("studentDetail", student);
-        this.showStudentsDetail = true;
+    public Student getStudentDetail(int id) {
+        this.student_instance = studentRepository.findById(id);
+        this.view_ID = Constants.SHOW_STUDENT_DETAIL;
+//        this.showStudentsDetail = true;
+        return student_instance;
     }
 
     public void updateStudent(Student student) {
@@ -80,11 +90,39 @@ public class StudentBean implements Serializable {
         backToListStudent();
     }
 
-    public Student findStudentById(int id){
-        return studentRepository.findById(id);
-    }
-
     public void backToListStudent() {
         this.showStudentsDetail = false;
     }
+
+    public void validateName(FacesContext context, UIComponent component, Object value) throws ValidatorException {
+        FacesMessage message = new FacesMessage("");
+        message.setSeverity(FacesMessage.SEVERITY_ERROR);
+        String name = value.toString().trim();
+        if (name.length() < 4 || name.length() > 20) {
+            message.setSummary("Invalid student's name");
+        }
+        if (!message.getSummary().equals("")) {
+            throw new ValidatorException(message);
+        }
+    }
+
+    public void validateEmail(FacesContext context, UIComponent component, Object value) {
+        FacesMessage message = new FacesMessage("");
+        message.setSeverity(FacesMessage.SEVERITY_ERROR);
+        String email = value.toString().trim();
+        String email_pattern = "^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$";
+
+        if (email.length() < 4) {
+            message.setSummary("Enter student's email");
+        } else if (email.length() > 20) {
+            message.setSummary("Invalid email. Enter name between 10-30 characters");
+        } else if (!email.matches(email_pattern)) {
+            message.setSummary("Invalid email");
+        }
+
+        if (!message.getSummary().equals("")) {
+            throw new ValidatorException(message);
+        }
+    }
+
 }

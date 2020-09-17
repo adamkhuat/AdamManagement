@@ -5,90 +5,105 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
-<h:body>
-    <ui:composition template="/templates/contents.xhtml">
-        <ui:define name="body-contents">
-            <h:form id="formStudent" rendered="#{not studentBean.showStudentsDetail}">
-                <h:commandButton value="NEW" action="#{studentBean.newStudent}">
-                    <f:ajax render="@all"/>
-                </h:commandButton>
-                <h:dataTable id="tableStudent" value="#{studentBean.allStudents}" var="student">
-                    <h:column>
-                        <f:facet name="header">ID</f:facet>
-                        <h:commandLink value="#{student.id}" action="#{studentBean.getStudentDetail(student.id)}"
-                                       style="text-decoration: none; color: black">
-                            <f:ajax render="@all"/>
-                        </h:commandLink>
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">Student Name</f:facet>
-                        <h:commandLink value="#{student.sname}" action="#{studentBean.getStudentDetail(student.id)}"
-                                       style="text-decoration: none; color: black">
-                            <f:ajax render="@all"/>
-                        </h:commandLink>
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">Password</f:facet>
-                        <h:commandLink value="#{student.spassword}" action="#{studentBean.getStudentDetail(student.id)}"
-                                       style="text-decoration: none; color: black">
-                            <f:ajax render="@all"/>
-                        </h:commandLink>
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">Date of Birth</f:facet>
-                        <h:commandLink action="#{studentBean.getStudentDetail(student.id)}"
-                                       style="text-decoration: none; color: black">
-                            <h:outputText value="#{student.dateOfBirth}">
-                                <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
-                            </h:outputText>
-                            <f:ajax render="@all"/>
-                        </h:commandLink>
-                    </h:column>
-                </h:dataTable>
-            </h:form>
+<f:view>
+    <h:head></h:head>
+    <h:body>
+        <ui:composition template="/templates/contents.xhtml">
+            <ui:define name="body-contents">
+                <h:form id="formStudent" rendered="#{not studentBean.showStudentsDetail}">
+                    <h:commandButton value="NEW" action="#{studentBean.newStudent}">
+                        <f:ajax render="@all"/>
+                    </h:commandButton>
+                    <h:dataTable id="tableStudent" value="#{studentBean.allStudents}" var="student">
+                        <h:column>
+                            <f:facet name="header">ID</f:facet>
+                            <h:commandLink value="#{student.id}" action="#{studentBean.getStudentDetail(student.id)}"
+                                           style="text-decoration: none; color: black">
+                                <f:ajax render="@all"/>
+                            </h:commandLink>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Student Name</f:facet>
+                            <h:commandLink value="#{student.sname}" action="#{studentBean.getStudentDetail(student.id)}"
+                                           style="text-decoration: none; color: black">
+                                <f:ajax render="@all"/>
+                            </h:commandLink>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Password</f:facet>
+                            <h:commandLink value="#{student.email}" action="#{studentBean.getStudentDetail(student.id)}"
+                                           style="text-decoration: none; color: black">
+                                <f:ajax render="@all"/>
+                            </h:commandLink>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Date of Birth</f:facet>
+                            <h:commandLink action="#{studentBean.getStudentDetail(student.id)}"
+                                           style="text-decoration: none; color: black">
+                                <h:outputText value="#{student.dateOfBirth}">
+                                    <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                                </h:outputText>
+                                <f:ajax render="@all"/>
+                            </h:commandLink>
+                        </h:column>
+                    </h:dataTable>
+                </h:form>
 
-            <h:form id="formDetail" rendered="#{studentBean.showStudentsDetail}">
-                <h:panelGrid columns="2" cellspacing="20" border="1">
-                    <f:facet name="header">
-                        <h:outputText value="STUDENT's DETAIL"/>
-                    </f:facet>
+                <h:form id="formDetail" rendered="#{studentBean.view_ID eq studentBean.ID_DETAIL_STUDENT}">
+                    <h:panelGrid columns="2" cellspacing="20" border="1">
+                        <f:facet name="header">
+                            <h:outputText value="STUDENT's DETAIL"/>
+                        </f:facet>
 
-                    <h:outputText value="ID"/>
-                    <h:outputText value="#{studentDetail.id}"/>
+                        <h:outputText value="ID"/>
+                        <h:outputText value="#{studentBean.student_instance.id}"/>
 
-                    <h:outputText value="Name"/>
-                    <h:inputText id="name" value="#{studentDetail.sname}" validator="studentsNameValidator"
-                                 onkeypress="return event.keyCode !== 13">
-                        <f:ajax event="change" execute="@all"
-                                listener="#{studentBean.updateStudent(studentDetail)}"/>
-                    </h:inputText>
+                        <h:outputText value="Name"/>
+                        <h:inputText id="name"
+                                     value="#{studentBean.student_instance.sname}"
+                                     onkeypress="return event.keyCode !== 13"
+                                     validator="#{studentBean.validateName}">
+                            <f:ajax listener="#{studentBean.updateStudent(studentBean.student_instance)}"
+                                    event="change"
+                                    execute="@all"
+                                    render="@all"/>
+                        </h:inputText>
 
-                    <h:outputText value="Password"/>
-                    <h:inputText value="#{studentDetail.spassword}" validator="studentPasswordValidator"
-                                 onkeypress="return event.keyCode !== 13">
-                        <f:ajax event="change" execute="@all"
-                                listener="#{studentBean.updateStudent(studentDetail)}"/>
-                    </h:inputText>
+                        <h:outputText value="Email"/>
+                        <h:inputText id="email"
+                                     value="#{studentBean.student_instance.email}"
+                                     validator="#{studentBean.validateEmail}"
+                                     onkeypress="return event.keyCode !== 13">
+                            <f:ajax event="change"
+                                    execute="@all"
+                                    listener="#{studentBean.updateStudent(studentBean.student_instance)}"
+                                    render="@all"/>
+                        </h:inputText>
 
-                    <h:outputText value="Date of Birth"/>
-                    <h:inputText value="#{studentDetail.dateOfBirth}" onkeypress="return event.keyCode !== 13">
-                        <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
-                        <f:ajax event="change" execute="@all"
-                                listener="#{studentBean.updateStudent(studentDetail)}"/>
-                    </h:inputText>
+                        <h:outputText value="Date of Birth"/>
+                        <h:inputText value="#{studentBean.student_instance.dateOfBirth}"
+                                     onkeypress="return event.keyCode !== 13">
+                            <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                            <f:ajax event="change"
+                                    execute="@all"
+                                    listener="#{studentBean.updateStudent(studentBean.student_instance)}"/>
+                        </h:inputText>
 
-                    <f:facet name="footer">
-                        <h:commandButton value="Delete" action="#{studentBean.deleteStudent(studentDetail.id)}"
-                                         onclick="return confirm('Are you sure?')" immediate="true"/>
+                        <f:facet name="footer">
+                            <h:commandButton value="Delete"
+                                             action="#{studentBean.deleteStudent(studentBean.student_instance.id)}"
+                                             onclick="return confirm('Are you sure?')" immediate="true"/>
 
-                        <h:commandButton value="Back" action="#{studentBean.backToListStudent}">
-                            <f:ajax render="@all"/>
-                        </h:commandButton>
-                        <h:messages layout="formDetail" errorStyle="color: red"/>
-                    </f:facet>
-                </h:panelGrid>
-            </h:form>
-        </ui:define>
-    </ui:composition>
-</h:body>
+                            <h:commandButton value="Back" action="#{studentBean.backToListStudent}">
+                                <f:ajax render="@all"/>
+                            </h:commandButton>
+                            <h:messages errorStyle="color: red"></h:messages>
+                        </f:facet>
+
+                    </h:panelGrid>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</f:view>
 </html>

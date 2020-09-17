@@ -15,12 +15,12 @@ public class Clazz {
     @Column(name = "className")
     private String className;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "monitorId")
     private Student monitor;
 
-    @OneToMany(mappedBy = "clazzId", cascade = CascadeType.ALL)
-    private List<Student> listStudent;
+    @OneToMany(mappedBy = "clazz", cascade = CascadeType.ALL)
+    private List<StudentClass> listStudent;
 
     public int getId() {
         return id;
@@ -46,11 +46,11 @@ public class Clazz {
         this.monitor = monitor;
     }
 
-    public List<Student> getListStudent() {
+    public List<StudentClass> getListStudent() {
         return listStudent;
     }
 
-    public void setListStudent(List<Student> listStudent) {
+    public void setListStudent(List<StudentClass> listStudent) {
         this.listStudent = listStudent;
     }
 }

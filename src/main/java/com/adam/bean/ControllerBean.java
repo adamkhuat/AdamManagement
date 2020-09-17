@@ -2,16 +2,15 @@ package com.adam.bean;
 
 import com.adam.constants.Constants;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.Conversation;
-import javax.enterprise.context.ConversationScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 
 @Named
-@ConversationScoped
+@SessionScoped
 public class ControllerBean implements Serializable {
 
     private final String ID_CLASS_MANAGEMENT = Constants.ID_CLASS_MANAGEMENT;
@@ -21,30 +20,31 @@ public class ControllerBean implements Serializable {
     @Inject
     private Conversation conversation;
 
-    @Inject
-    private StudentBean studentBean;
-
-    @Inject
-    private ClazzBean clazzBean;
-
-
     public void showStudentManagement() {
         this.viewId = ID_STUDENT_MANAGEMENT;
-        studentBean.startConversation();
+        this.startConversation();
     }
 
     public void showClassManagement() {
         this.viewId = ID_CLASS_MANAGEMENT;
-        clazzBean.startConversation();
+        this.endConversation();
     }
 
     public void backToHomePage() {
-        if (this.viewId.equals(ID_STUDENT_MANAGEMENT)) {
-            studentBean.endConversation();
-        } else if (this.viewId.equals(ID_CLASS_MANAGEMENT)) {
-            clazzBean.endConversation();
-        }
+        conversation.end();
         this.viewId = null;
+    }
+
+    public void startConversation() {
+        if (FacesContext.getCurrentInstance().isPostback() && conversation.isTransient()) {
+            conversation.begin();
+        }
+    }
+
+    public void endConversation() {
+        if (!conversation.isTransient()) {
+            conversation.end();
+        }
     }
 
     public String getID_CLASS_MANAGEMENT() {

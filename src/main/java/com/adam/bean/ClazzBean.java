@@ -35,21 +35,6 @@ public class ClazzBean implements Serializable {
     @Inject
     private StudentClazzRepository studentClazzRepository;
 
-    @Inject
-    private Conversation conversation;
-
-    public void startConversation() {
-        if (FacesContext.getCurrentInstance().isPostback() && conversation.isTransient()) {
-            conversation.begin();
-        }
-    }
-
-    public void endConversation() {
-        if (!conversation.isTransient()) {
-            conversation.end();
-        }
-    }
-
     public List<Clazz> getAllClazz() {
         List<Clazz> list = repo.getAllClazz();
         System.out.println("CLASS SIZE" + list.size());

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<f:view>
+
+    <h:head></h:head>
+    <h:body>
+        <h:form>
+            <h:panelGrid columns="2" cellspacing="20" border="1">
+                <h:outputLabel for="input" value="INPUT"/>
+                <h:inputText id="input"
+                             validator="#{studentBean.validateName}"/>
+                <h:commandButton value="OK" type="submit"/>
+                <h:messages></h:messages>
+            </h:panelGrid>
+        </h:form>
+
+        <h:form id="formDetail" rendered="true">
+            <h:panelGrid columns="2" cellspacing="20" border="1">
+                <f:facet name="header">
+                    <h:outputText value="STUDENT's DETAIL"/>
+                </f:facet>
+
+                <h:outputText value="ID"/>
+                <h:outputText value="#{studentBean.student_instance.id}"/>
+
+                <h:outputText value="Name"/>
+                <h:inputText id="name"
+                             value="#{studentBean.student_instance.sname}"
+                             validator="#{studentBean.validateName}"
+                             onkeypress="return event.keyCode !== 13">
+                    <f:ajax event="change"
+                            execute="@all"
+                            render="all"
+                            listener="#{studentBean.updateStudent(studentBean.student_instance)}"/>
+                </h:inputText>
+
+                <h:outputText value="Email"/>
+                <h:inputText value="#{studentBean.student_instance.email}"
+                             onkeypress="return event.keyCode !== 13">
+                    <f:ajax event="change"
+                            execute="@all"
+                            listener="#{studentBean.updateStudent(studentBean.student_instance)}"/>
+                </h:inputText>
+
+                <h:outputText value="Date of Birth"/>
+                <h:inputText value="#{studentBean.student_instance.dateOfBirth}"
+                             onkeypress="return event.keyCode !== 13">
+                    <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                    <f:ajax event="change"
+                            execute="@all"
+                            listener="#{studentBean.updateStudent(studentBean.student_instance)}"/>
+                </h:inputText>
+
+                <f:facet name="footer">
+                    <h:commandButton value="Delete"
+                                     action="#{studentBean.deleteStudent(studentBean.student_instance.id)}"
+                                     onclick="return confirm('Are you sure?')" immediate="true"/>
+
+                    <h:commandButton value="Back" action="#{studentBean.backToListStudent}">
+                        <f:ajax render="@all"/>
+                    </h:commandButton>
+                    <h:messages></h:messages>
+                </f:facet>
+            </h:panelGrid>
+        </h:form>
+    </h:body>
+</f:view>
+</html>
