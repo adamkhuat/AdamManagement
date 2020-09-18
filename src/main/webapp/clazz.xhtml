@@ -9,7 +9,7 @@
 <h:body>
     <ui:composition template="/templates/contents.xhtml">
         <ui:define name="body-contents">
-            <h:form id="formClass" rendered="#{!clazzBean.showClazzDetail}">
+            <h:form id="formClass" rendered="#{clazzBean.view_Id eq clazzBean.ID_CLASS_MANAGEMENT}">
                 <h:commandButton value="NEW" action="#{clazzBean.createClazz}"/>
                 <h:dataTable id="tableClazz" value="#{clazzBean.allClazz}" var="clazz">
                     <h:column>
@@ -28,7 +28,7 @@
                     </h:column>
                     <h:column>
                         <f:facet name="header">Mornitor's Id</f:facet>
-                        <h:commandLink value="#{clazz.monitorId}" action="#{clazzBean.getClazzDetail(clazz.id)}"
+                        <h:commandLink value="#{clazz.monitor.id}" action="#{clazzBean.getClazzDetail(clazz.id)}"
                                        style="text-decoration: none; color: black">
                             <f:ajax render="@all"/>
                         </h:commandLink>
@@ -36,7 +36,7 @@
                 </h:dataTable>
             </h:form>
 
-            <h:form id="formClazzDetail" rendered="#{clazzBean.showClazzDetail}">
+            <h:form id="formClazzDetail" rendered="#{clazzBean.view_Id eq clazzBean.SHOW_CLASS_DETAIL}">
                 <h:panelGrid columns="3" border="1" cellspacing="20">
 
                     <f:facet name="header">
@@ -44,69 +44,39 @@
                     </f:facet>
 
                     <h:outputText value="ID"/>
-                    <h:outputText value="#{clazzDetail.id}"/>
+                    <h:outputText value="#{clazzBean.clazz_instance.id}"/>
                     <h:outputText/>
 
                     <h:outputText value="Name"/>
-                    <h:inputText value="#{clazzDetail.className}" onkeypress="return event.keyCode !== 13">
-                        <f:ajax event="change" execute="@this"
-                                listener="#{clazzBean.update(clazzDetail)}"/>
+                    <h:inputText value="#{clazzBean.clazz_instance.className}" onkeypress="return event.keyCode !== 13">
+                        <f:ajax event="change"
+                                render="@all"
+                                execute="@this"
+                                listener="#{clazzBean.update(clazzBean.clazz_instance)}"/>
                     </h:inputText>
                     <h:outputText/>
 
                     <h:outputText value="Monitor's ID"/>
-                    <h:inputText value="#{clazzDetail.monitorId}" onkeypress="return event.keyCode !== 13">
-                        <f:ajax event="change" execute="@this" listener="#{clazzBean.update(clazzDetail)}"
-                                render="monitorsName"/>
+                    <h:inputText id="monitor"
+                                 value="#{clazzBean.clazz_instance.monitor.id}"
+                                 onkeypress="return event.keyCode !== 13">
+                        <f:converter for="monitor" binding="#{clazzBean.monitorConverter()}"/>
+                        <f:ajax event="change"
+                                execute="@this"
+                                listener="#{clazzBean.update(clazzBean.clazz_instance.id)}"
+                                render="@all"/>
                     </h:inputText>
                     <h:outputText id="monitorsName"
-                                  value="TEST"/>
+                                  value="#{clazzBean.clazz_instance.monitor.sname}"/>
 
                     <f:facet name="footer">
-                        <h:commandButton value="Add" action="#{clazzBean.addStudentToTheClass()}"/>
-                        <h:commandButton value="Delete" action="#{clazzBean.delete(clazzDetail.id)}"
+                        <h:commandButton value="Delete" action="#{clazzBean.delete(clazzBean.clazz_instance.id)}"
                                          onclick="return confirm('Are you sure?')" immediate="true"/>
 
                         <h:commandButton value="Back" action="#{clazzBean.backToClazzList}"/>
                         <h:messages layout="formClazzDetail" errorStyle="color: red"/>
                     </f:facet>
 
-                </h:panelGrid>
-            </h:form>
-
-            <h:form id="formStudentsClass" rendered="#{clazzBean.showClazzDetail}">
-                <h:dataTable id="tableStudentsClass" value="#{clazzBean.getStudentList(clazzDetail.id)}" var="student">
-                    <h:column>
-                        <f:facet name="header">ID</f:facet>
-                        <h:outputText value="#{student.id}"/>
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">Name</f:facet>
-                        <h:outputText value="#{student.sname}"/>
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">Date Of Birth</f:facet>
-                        <h:outputText value="#{student.dateOfBirth}">
-                            <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
-                        </h:outputText>
-                    </h:column>
-                </h:dataTable>
-            </h:form>
-
-            <h:form id="formAddStudentClazz" rendered="#{clazzBean.showClazzDetail}">
-                <h:panelGrid columns="2" cellspacing="20">
-                    <f:facet name="header">Add Student</f:facet>
-
-                    <h:outputText value="ID"/>
-                    <h:inputText id="studentAddId" value="#{studentAdd.id}" p:placeholder="ID">
-                        <f:ajax event="change" execute="@this" render="@all"/>
-                    </h:inputText>
-
-                    <h:outputText id="studentAddName" value="Name"/>
-                    <h:outputText value="#{studentAdd.sname}"/>
-
-                    <h:outputText value="Date of Birth"/>
-                    <h:outputText value="#{studentAdd.dateOfBirth}"/>
                 </h:panelGrid>
             </h:form>
 

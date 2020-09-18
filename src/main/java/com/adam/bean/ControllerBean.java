@@ -27,11 +27,11 @@ public class ControllerBean implements Serializable {
 
     public void showClassManagement() {
         this.viewId = ID_CLASS_MANAGEMENT;
-        this.endConversation();
+        this.startConversation();
     }
 
     public void backToHomePage() {
-        conversation.end();
+        this.endConversation();
         this.viewId = null;
     }
 

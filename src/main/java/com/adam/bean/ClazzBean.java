@@ -1,32 +1,52 @@
 package com.adam.bean;
 
+import com.adam.constants.Constants;
 import com.adam.model.Clazz;
 import com.adam.model.Student;
-import com.adam.model.StudentClass;
 import com.adam.repository.clazz.ClazzRepository;
+import com.adam.repository.student.StudentRepositoryImpl;
 import com.adam.repository.studentClazz.StudentClazzRepository;
 
-import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.convert.Converter;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 @Named
 @ConversationScoped
 public class ClazzBean implements Serializable {
 
-    private boolean showClazzDetail = false;
+    private final String ID_CLASS_MANAGEMENT = Constants.ID_CLASS_MANAGEMENT;
+    private final String SHOW_CLASS_DETAIL = Constants.SHOW_CLASS_DETAIL;
+    private String view_Id = ID_CLASS_MANAGEMENT;
+    private Clazz clazz_instance;
 
-    public boolean isShowClazzDetail() {
-        return showClazzDetail;
+    public Clazz getClazz_instance() {
+        return clazz_instance;
     }
 
-    public void setShowClazzDetail(boolean showClazzDetail) {
-        this.showClazzDetail = showClazzDetail;
+    public void setClazz_instance(Clazz clazz_instance) {
+        this.clazz_instance = clazz_instance;
+    }
+
+    public String getView_Id() {
+        return view_Id;
+    }
+
+    public void setView_Id(String view_Id) {
+        this.view_Id = view_Id;
+    }
+
+    public String getID_CLASS_MANAGEMENT() {
+        return ID_CLASS_MANAGEMENT;
+    }
+
+    public String getSHOW_CLASS_DETAIL() {
+        return SHOW_CLASS_DETAIL;
     }
 
     @Inject
@@ -45,50 +65,51 @@ public class ClazzBean implements Serializable {
         Clazz clazz = new Clazz();
         save(clazz);
         getClazzDetail(clazz.getId());
-        this.setShowClazzDetail(true);
     }
 
     public void save(Clazz clazz) {
         repo.save(clazz);
     }
 
-    public void update(Clazz clazz) {
-        repo.update(clazz);
-        this.setShowClazzDetail(false);
+    public void update(int id) {
+        repo.update(id);
+        this.setView_Id(SHOW_CLASS_DETAIL);
     }
 
     public void delete(int id) {
         repo.delete(id);
-        this.setShowClazzDetail(false);
+        this.setView_Id(ID_CLASS_MANAGEMENT);
     }
 
     public Clazz getClazzDetail(int id) {
-        Clazz clazz = repo.findClazzById(id);
-        Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
-        map.put("clazzDetail", clazz);
-        this.setShowClazzDetail(true);
-        return clazz;
+        this.clazz_instance = repo.findClazzById(id);
+        this.setView_Id(SHOW_CLASS_DETAIL);
+        return clazz_instance;
     }
 
     public void backToClazzList() {
-        this.setShowClazzDetail(false);
+        this.setView_Id(ID_CLASS_MANAGEMENT);
     }
 
     public List<Student> getStudentList(int clazzId) {
         return studentClazzRepository.getListStudent(clazzId);
     }
 
-    public void createStudentClazz(){
-        StudentClass studentClass = new StudentClass();
-        studentClazzRepository.save(studentClass);
-        getStudentClazzDetail(studentClass.getId());
+    public Converter monitorConverter() {
+        return new Converter() {
+            @Override
+            public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String s) {
+                int monitorId = Integer.parseInt(s);
+                Student monitor = new StudentRepositoryImpl().findById(monitorId);
+                return monitor;
+            }
+
+            @Override
+            public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object o) {
+                return String.valueOf(o);
+            }
+        };
     }
 
-    public StudentClass getStudentClazzDetail(int id){
-        StudentClass studentClass = studentClazzRepository.findStudentInTheClassById(id);
-        Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
-        sessionMap.put("StudentClazzDetail", studentClass);
-        return studentClass;
-    }
 
 }

@@ -11,7 +11,7 @@ public interface ClazzRepository {
 
     boolean save(Clazz clazz);
 
-    boolean update(Clazz clazz);
+    boolean update(int id);
 
     boolean delete(int clazzId);
 

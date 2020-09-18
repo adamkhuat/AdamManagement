@@ -4,13 +4,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <f:view>
     <h:head></h:head>
     <h:body>
         <ui:composition template="/templates/contents.xhtml">
             <ui:define name="body-contents">
-                <h:form id="formStudent" rendered="#{not studentBean.showStudentsDetail}">
+                <h:form id="formStudent" rendered="#{studentBean.view_ID eq studentBean.ID_STUDENT_MANAGEMENT}">
                     <h:commandButton value="NEW" action="#{studentBean.newStudent}">
                         <f:ajax render="@all"/>
                     </h:commandButton>
@@ -41,7 +42,8 @@
                             <h:commandLink action="#{studentBean.getStudentDetail(student.id)}"
                                            style="text-decoration: none; color: black">
                                 <h:outputText value="#{student.dateOfBirth}">
-                                    <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                                    <f:converter binding="#{studentBean.dateOfBirthConverter()}"/>
+                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
                                 </h:outputText>
                                 <f:ajax render="@all"/>
                             </h:commandLink>
@@ -59,34 +61,40 @@
                         <h:outputText value="#{studentBean.student_instance.id}"/>
 
                         <h:outputText value="Name"/>
-                        <h:inputText id="name"
+                        <h:inputText id="sname"
                                      value="#{studentBean.student_instance.sname}"
-                                     onkeypress="return event.keyCode !== 13"
-                                     validator="#{studentBean.validateName}">
+                                     onkeypress="return event.keyCode !== 13">
+                            <f:validator for="sname" binding="#{studentBean.validateStudentName()}"/>
                             <f:ajax listener="#{studentBean.updateStudent(studentBean.student_instance)}"
                                     event="change"
-                                    execute="@all"
+                                    execute="@this"
                                     render="@all"/>
                         </h:inputText>
 
                         <h:outputText value="Email"/>
                         <h:inputText id="email"
                                      value="#{studentBean.student_instance.email}"
-                                     validator="#{studentBean.validateEmail}"
                                      onkeypress="return event.keyCode !== 13">
-                            <f:ajax event="change"
-                                    execute="@all"
-                                    listener="#{studentBean.updateStudent(studentBean.student_instance)}"
+                            <f:validator for="email" binding="#{studentBean.validatorStudentEmail()}"/>
+                            <f:ajax listener="#{studentBean.updateStudent(studentBean.student_instance)}"
+                                    event="change"
+                                    resetValues="true"
+                                    execute="@this"
                                     render="@all"/>
                         </h:inputText>
 
                         <h:outputText value="Date of Birth"/>
-                        <h:inputText value="#{studentBean.student_instance.dateOfBirth}"
+                        <h:inputText id="dateOfBirth"
+                                     p:placeholder="dd/MM/yyyy"
+                                     value="#{studentBean.student_instance.dateOfBirth}"
                                      onkeypress="return event.keyCode !== 13">
-                            <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
-                            <f:ajax event="change"
-                                    execute="@all"
-                                    listener="#{studentBean.updateStudent(studentBean.student_instance)}"/>
+                            <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                            <f:validator for="dateOfBirth" binding="#{studentBean.validateDateOfBirth()}"/>
+                            <f:converter for="dateOfBirth" binding="#{studentBean.dateOfBirthConverter()}"/>
+                            <f:ajax listener="#{studentBean.updateStudent(studentBean.student_instance)}"
+                                    event="change"
+                                    execute="@this"
+                                    render="@all"/>
                         </h:inputText>
 
                         <f:facet name="footer">
@@ -94,10 +102,10 @@
                                              action="#{studentBean.deleteStudent(studentBean.student_instance.id)}"
                                              onclick="return confirm('Are you sure?')" immediate="true"/>
 
-                            <h:commandButton value="Back" action="#{studentBean.backToListStudent}">
+                            <h:commandButton value="Back" action="#{studentBean.backToListStudent}" immediate="true">
                                 <f:ajax render="@all"/>
                             </h:commandButton>
-                            <h:messages errorStyle="color: red"></h:messages>
+                            <h:messages errorStyle="color: red" style="color: red"/>
                         </f:facet>
 
                     </h:panelGrid>

@@ -33,10 +33,10 @@ public class ClazzRepositoryImpl implements ClazzRepository, Serializable {
     }
 
     @Override
-    public boolean update(Clazz clazz) {
+    public boolean update(int id) {
         try {
             entityManager.getTransaction().begin();
-            entityManager.merge(clazz);
+            entityManager.merge(findClazzById(id));
             entityManager.getTransaction().commit();
             return true;
         } catch (Exception e) {
