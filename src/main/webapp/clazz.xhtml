@@ -52,13 +52,13 @@
                         <f:ajax event="change"
                                 render="@all"
                                 execute="@this"
-                                listener="#{clazzBean.update(clazzBean.clazz_instance)}"/>
+                                listener="#{clazzBean.update(clazzBean.clazz_instance.id)}"/>
                     </h:inputText>
                     <h:outputText/>
 
                     <h:outputText value="Monitor's ID"/>
                     <h:inputText id="monitor"
-                                 value="#{clazzBean.clazz_instance.monitor.id}"
+                                 value="#{clazzBean.clazz_instance.monitor}"
                                  onkeypress="return event.keyCode !== 13">
                         <f:converter for="monitor" binding="#{clazzBean.monitorConverter()}"/>
                         <f:ajax event="change"
@@ -70,6 +70,10 @@
                                   value="#{clazzBean.clazz_instance.monitor.sname}"/>
 
                     <f:facet name="footer">
+                        <h:commandButton value="Add Student"
+                                         action="#{clazzBean.addStudentToTheClass(clazzBean.clazz_instance.id)}">
+                            <f:ajax render="@all"/>
+                        </h:commandButton>
                         <h:commandButton value="Delete" action="#{clazzBean.delete(clazzBean.clazz_instance.id)}"
                                          onclick="return confirm('Are you sure?')" immediate="true"/>
 
@@ -78,6 +82,51 @@
                     </f:facet>
 
                 </h:panelGrid>
+            </h:form>
+
+            <h:form id="formStudentClass" rendered="#{clazzBean.view_Id eq clazzBean.SHOW_CLASS_DETAIL}">
+                <h:dataTable id="tableStudentClass"
+                             value="#{clazzBean.getStudentListByRepo(clazzBean.clazz_instance.id)}"
+                             var="sc">
+                    <h:column>
+                        <f:facet name="header">ID</f:facet>
+                        <h:outputText value="#{sc.id}"/>
+                        <h:inputText id="addStudentID"
+                                     rendered="#{clazzBean.student_instance eq null}"
+                                     p:placeholder="Student's ID"
+                                     value="#{clazzBean.student_instance}">
+                            <f:converter for="addStudentID" binding="#{clazzBean.addStudentToTheClassConverter()}"/>
+                        </h:inputText>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Name</f:facet>
+                        <h:outputText value="#{sc.sname}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Email</f:facet>
+                        <h:outputText value="#{sc.email}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Date Of Birth</f:facet>
+                        <h:outputText value="#{sc.dateOfBirth}">
+                            <f:converter binding="#{studentBean.dateOfBirthConverter()}"/>
+                            <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                        </h:outputText>
+                        <h:inputText id="dateOfBirth"
+                                     value="#{sc.dateOfBirth}"
+                                     rendered="#{sc.dateOfBirth eq null}"
+                                     p:placeholder="dd/MM/yyyy"
+                                     onkeypress="return event.keyCode !== 13">
+                            <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                            <f:validator for="dateOfBirth" binding="#{studentBean.validateDateOfBirth()}"/>
+                            <f:converter for="dateOfBirth" binding="#{studentBean.dateOfBirthConverter()}"/>
+                            <f:ajax listener="#{studentBean.updateStudent(studentBean.student_instance)}"
+                                    event="change"
+                                    execute="@this"
+                                    render="@all"/>
+                        </h:inputText>
+                    </h:column>
+                </h:dataTable>
             </h:form>
 
         </ui:define>

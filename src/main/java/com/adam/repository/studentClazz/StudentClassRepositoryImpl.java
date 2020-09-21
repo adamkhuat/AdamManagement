@@ -12,7 +12,7 @@ import java.util.List;
 public class StudentClassRepositoryImpl implements StudentClazzRepository, Serializable {
 
     EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
-    private final String GET_LIST_STUDENT = "SELECT s " + "FROM StudentClass sc INNER JOIN Student s ON sc.studentId = s.id " + "INNER JOIN Clazz c ON c.id = sc.clazzId " + "WHERE c.id = :id";
+    private final String GET_LIST_STUDENT = "SELECT sc.student" + " FROM StudentClass sc" + " WHERE sc.clazz.id = :id";
 
     @Override
     public boolean save(StudentClass studentClass) {
@@ -20,10 +20,11 @@ public class StudentClassRepositoryImpl implements StudentClazzRepository, Seria
             entityManager.getTransaction().begin();
             entityManager.persist(studentClass);
             entityManager.getTransaction().commit();
-            return true;
         } catch (Exception e) {
+            System.out.println(e);
             return false;
         }
+        return true;
     }
 
     @Override
@@ -50,12 +51,6 @@ public class StudentClassRepositoryImpl implements StudentClazzRepository, Seria
         }
     }
 
-    @Override
-    public List<StudentClass> getAllStudentOfTheClass(int clazzId) {
-        Query query = entityManager.createNamedQuery("getAllStudentClazz");
-        List<StudentClass> list = query.getResultList();
-        return list;
-    }
 
     @Override
     public StudentClass findStudentInTheClassById(int id) {
