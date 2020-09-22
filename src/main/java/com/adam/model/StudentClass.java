@@ -14,7 +14,7 @@ public class StudentClass {
     @JoinColumn(name = "clazzId")
     private Clazz clazz;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne
     @JoinColumn(name = "studentId")
     private Student student;
 

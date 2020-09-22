@@ -27,7 +27,7 @@ public class ClazzBean implements Serializable {
     private String view_Id = ID_CLASS_MANAGEMENT;
     private Clazz clazz_instance;
     private Student student_instance;
-    private List<Student> studentList;
+    private StudentClass studentClass;
 
     public Clazz getClazz_instance() {
         return clazz_instance;
@@ -61,12 +61,12 @@ public class ClazzBean implements Serializable {
         this.student_instance = student_instance;
     }
 
-    public List<Student> getStudentList() {
-        return studentList;
+    public StudentClass getStudentClass() {
+        return studentClass;
     }
 
-    public void setStudentList(List<Student> studentList) {
-        this.studentList = studentList;
+    public void setStudentClass(StudentClass studentClass) {
+        this.studentClass = studentClass;
     }
 
     @Inject
@@ -115,9 +115,7 @@ public class ClazzBean implements Serializable {
     }
 
     public List<Student> getStudentListByRepo(int clazzId) {
-        this.studentList = studentClazzRepository.getListStudent(clazzId);
-        int count = studentList.size();
-        return studentList;
+        return studentClazzRepository.getListStudent(clazzId);
     }
 
     public Converter monitorConverter() {
@@ -137,15 +135,14 @@ public class ClazzBean implements Serializable {
         };
     }
 
-    public void addStudentToTheClass(int clazzId) {
-        student_instance = new Student();
-        StudentClass studentClass = new StudentClass();
+    public void addStudentToTheClass() {
+        student_instance = null;
+        studentClass = new StudentClass();
         studentClass.setClazz(clazz_instance);
         studentClass.setStudent(student_instance);
-        int cid = clazz_instance.getId();
         if (studentClazzRepository.save(studentClass)) {
             System.out.println("StudentClass SAVED");
-        } else System.out.println("FAILEDDDDDDDDDDDDDDDDDDDDD");
+        } else System.out.println("Save FAILED");
     }
 
     public Converter addStudentToTheClassConverter() {
@@ -153,7 +150,8 @@ public class ClazzBean implements Serializable {
             @Override
             public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String s) {
                 int studentId = Integer.parseInt(s);
-                return studentRepository.findById(studentId);
+                Student student = studentRepository.findById(studentId);
+                return student;
             }
 
             @Override
@@ -162,5 +160,11 @@ public class ClazzBean implements Serializable {
                 return String.valueOf(student_instance.getId());
             }
         };
+    }
+
+    public void saveStudentToTheClass(){
+        studentClass.setStudent(student_instance);
+        studentClass.setClazz(clazz_instance);
+        studentClazzRepository.update(studentClass);
     }
 }

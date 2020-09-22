@@ -71,7 +71,7 @@
 
                     <f:facet name="footer">
                         <h:commandButton value="Add Student"
-                                         action="#{clazzBean.addStudentToTheClass(clazzBean.clazz_instance.id)}">
+                                         action="#{clazzBean.addStudentToTheClass()}">
                             <f:ajax render="@all"/>
                         </h:commandButton>
                         <h:commandButton value="Delete" action="#{clazzBean.delete(clazzBean.clazz_instance.id)}"
@@ -92,19 +92,25 @@
                         <f:facet name="header">ID</f:facet>
                         <h:outputText value="#{sc.id}"/>
                         <h:inputText id="addStudentID"
-                                     rendered="#{clazzBean.student_instance eq null}"
+                                     rendered="#{sc.id == null}"
                                      p:placeholder="Student's ID"
                                      value="#{clazzBean.student_instance}">
                             <f:converter for="addStudentID" binding="#{clazzBean.addStudentToTheClassConverter()}"/>
+                            <f:ajax listener="#{clazzBean.saveStudentToTheClass()}"
+                                    event="change"
+                                    execute="@this"
+                                    render="@all"/>
                         </h:inputText>
                     </h:column>
                     <h:column>
                         <f:facet name="header">Name</f:facet>
                         <h:outputText value="#{sc.sname}"/>
+                        <h:outputText value="#{clazzBean.student_instance.sname}" rendered="#{sc.sname eq null}"/>
                     </h:column>
                     <h:column>
                         <f:facet name="header">Email</f:facet>
                         <h:outputText value="#{sc.email}"/>
+                        <h:outputText value="#{clazzBean.student_instance.email}" rendered="#{sc.email eq null}"/>
                     </h:column>
                     <h:column>
                         <f:facet name="header">Date Of Birth</f:facet>
@@ -112,19 +118,11 @@
                             <f:converter binding="#{studentBean.dateOfBirthConverter()}"/>
                             <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
                         </h:outputText>
-                        <h:inputText id="dateOfBirth"
-                                     value="#{sc.dateOfBirth}"
-                                     rendered="#{sc.dateOfBirth eq null}"
-                                     p:placeholder="dd/MM/yyyy"
-                                     onkeypress="return event.keyCode !== 13">
+                        <h:outputText value="#{clazzBean.student_instance.dateOfBirth}"
+                                      rendered="#{sc.dateOfBirth eq null}">
+                            <f:converter binding="#{studentBean.dateOfBirthConverter()}"/>
                             <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
-                            <f:validator for="dateOfBirth" binding="#{studentBean.validateDateOfBirth()}"/>
-                            <f:converter for="dateOfBirth" binding="#{studentBean.dateOfBirthConverter()}"/>
-                            <f:ajax listener="#{studentBean.updateStudent(studentBean.student_instance)}"
-                                    event="change"
-                                    execute="@this"
-                                    render="@all"/>
-                        </h:inputText>
+                        </h:outputText>
                     </h:column>
                 </h:dataTable>
             </h:form>
