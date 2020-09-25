@@ -86,17 +86,15 @@
 
             <h:form id="formStudentClass" rendered="#{clazzBean.view_Id eq clazzBean.SHOW_CLASS_DETAIL}">
                 <h:dataTable id="tableStudentClass"
-                             value="#{clazzBean.getStudentListByRepo(clazzBean.clazz_instance.id)}"
+                             value="#{clazzBean.clazz_instance.listStudent}"
                              var="sc">
                     <h:column>
                         <f:facet name="header">ID</f:facet>
-                        <h:outputText value="#{sc.id}"/>
                         <h:inputText id="addStudentID"
-                                     rendered="#{sc.id == null}"
                                      p:placeholder="Student's ID"
-                                     value="#{clazzBean.student_instance}">
+                                     value="#{sc.student}">
                             <f:converter for="addStudentID" binding="#{clazzBean.addStudentToTheClassConverter()}"/>
-                            <f:ajax listener="#{clazzBean.saveStudentToTheClass()}"
+                            <f:ajax listener="#{clazzBean.saveStudentToTheClass(sc.id)}"
                                     event="change"
                                     execute="@this"
                                     render="@all"/>
@@ -104,22 +102,15 @@
                     </h:column>
                     <h:column>
                         <f:facet name="header">Name</f:facet>
-                        <h:outputText value="#{sc.sname}"/>
-                        <h:outputText value="#{clazzBean.student_instance.sname}" rendered="#{sc.sname eq null}"/>
+                        <h:outputText value="#{sc.student.sname}"/>
                     </h:column>
                     <h:column>
                         <f:facet name="header">Email</f:facet>
-                        <h:outputText value="#{sc.email}"/>
-                        <h:outputText value="#{clazzBean.student_instance.email}" rendered="#{sc.email eq null}"/>
+                        <h:outputText value="#{sc.student.email}"/>
                     </h:column>
                     <h:column>
                         <f:facet name="header">Date Of Birth</f:facet>
-                        <h:outputText value="#{sc.dateOfBirth}">
-                            <f:converter binding="#{studentBean.dateOfBirthConverter()}"/>
-                            <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
-                        </h:outputText>
-                        <h:outputText value="#{clazzBean.student_instance.dateOfBirth}"
-                                      rendered="#{sc.dateOfBirth eq null}">
+                        <h:outputText value="#{sc.student.dateOfBirth}">
                             <f:converter binding="#{studentBean.dateOfBirthConverter()}"/>
                             <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
                         </h:outputText>

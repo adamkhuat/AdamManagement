@@ -1,18 +1,15 @@
 package com.adam.repository.studentClazz;
 
-import com.adam.model.Student;
 import com.adam.model.StudentClass;
 
-import java.util.List;
 
 public interface StudentClazzRepository {
     boolean save(StudentClass studentClass);
 
-    boolean update(StudentClass studentClass);
+    boolean update(int id);
 
     boolean delete(int id);
 
     StudentClass findStudentInTheClassById(int id);
 
-    List<Student> getListStudent(int clazzId);
 }

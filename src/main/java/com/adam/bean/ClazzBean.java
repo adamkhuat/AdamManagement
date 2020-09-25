@@ -26,8 +26,6 @@ public class ClazzBean implements Serializable {
     private final String SHOW_CLASS_DETAIL = Constants.SHOW_CLASS_DETAIL;
     private String view_Id = ID_CLASS_MANAGEMENT;
     private Clazz clazz_instance;
-    private Student student_instance;
-    private StudentClass studentClass;
 
     public Clazz getClazz_instance() {
         return clazz_instance;
@@ -51,22 +49,6 @@ public class ClazzBean implements Serializable {
 
     public String getSHOW_CLASS_DETAIL() {
         return SHOW_CLASS_DETAIL;
-    }
-
-    public Student getStudent_instance() {
-        return student_instance;
-    }
-
-    public void setStudent_instance(Student student_instance) {
-        this.student_instance = student_instance;
-    }
-
-    public StudentClass getStudentClass() {
-        return studentClass;
-    }
-
-    public void setStudentClass(StudentClass studentClass) {
-        this.studentClass = studentClass;
     }
 
     @Inject
@@ -114,17 +96,12 @@ public class ClazzBean implements Serializable {
         this.setView_Id(ID_CLASS_MANAGEMENT);
     }
 
-    public List<Student> getStudentListByRepo(int clazzId) {
-        return studentClazzRepository.getListStudent(clazzId);
-    }
-
     public Converter monitorConverter() {
         return new Converter() {
             @Override
             public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String s) {
                 int monitorId = Integer.parseInt(s);
-                Student monitor = new StudentRepositoryImpl().findById(monitorId);
-                return monitor;
+                return new StudentRepositoryImpl().findById(monitorId);
             }
 
             @Override
@@ -136,13 +113,9 @@ public class ClazzBean implements Serializable {
     }
 
     public void addStudentToTheClass() {
-        student_instance = null;
-        studentClass = new StudentClass();
+        StudentClass studentClass = new StudentClass();
         studentClass.setClazz(clazz_instance);
-        studentClass.setStudent(student_instance);
-        if (studentClazzRepository.save(studentClass)) {
-            System.out.println("StudentClass SAVED");
-        } else System.out.println("Save FAILED");
+        studentClazzRepository.save(studentClass);
     }
 
     public Converter addStudentToTheClassConverter() {
@@ -156,15 +129,13 @@ public class ClazzBean implements Serializable {
 
             @Override
             public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object o) {
-                student_instance = (Student) o;
-                return String.valueOf(student_instance.getId());
+                Student student = (Student) o;
+                return String.valueOf(student.getId());
             }
         };
     }
 
-    public void saveStudentToTheClass(){
-        studentClass.setStudent(student_instance);
-        studentClass.setClazz(clazz_instance);
-        studentClazzRepository.update(studentClass);
+    public void saveStudentToTheClass(int id) {
+        studentClazzRepository.update(id);
     }
 }

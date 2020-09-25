@@ -1,7 +1,6 @@
 package com.adam.repository.clazz;
 
 import com.adam.model.Clazz;
-import com.adam.model.Student;
 import com.adam.utils.JPAUtil;
 
 import javax.persistence.EntityManager;
@@ -59,14 +58,8 @@ public class ClazzRepositoryImpl implements ClazzRepository, Serializable {
 
     @Override
     public Clazz findClazzById(int clazzId) {
-        Clazz clazz = entityManager.find(Clazz.class, clazzId);
-        return clazz;
+        return entityManager.find(Clazz.class, clazzId);
     }
 
-    @Override
-    public List<Student> getListStudentByClazzId(int clazzId) {
-        Query query = entityManager.createQuery("");
-        return null;
-    }
 
 }

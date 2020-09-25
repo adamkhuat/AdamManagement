@@ -1,8 +1,6 @@
 package com.adam.repository.clazz;
 
 import com.adam.model.Clazz;
-import com.adam.model.Student;
-import com.adam.model.StudentClass;
 
 import java.util.List;
 
@@ -16,7 +14,5 @@ public interface ClazzRepository {
     boolean delete(int clazzId);
 
     Clazz findClazzById(int clazzId);
-
-    List<Student> getListStudentByClazzId(int clazzId);
 
 }
