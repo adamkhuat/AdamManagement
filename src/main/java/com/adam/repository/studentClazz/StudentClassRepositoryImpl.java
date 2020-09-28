@@ -28,7 +28,7 @@ public class StudentClassRepositoryImpl implements StudentClazzRepository, Seria
         try {
             StudentClass studentClass = findStudentInTheClassById(id);
             entityManager.getTransaction().begin();
-            entityManager.merge(findStudentInTheClassById(id));
+            entityManager.merge(studentClass);
             entityManager.getTransaction().commit();
             return true;
         } catch (Exception e) {

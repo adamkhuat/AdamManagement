@@ -92,6 +92,10 @@ public class ClazzBean implements Serializable {
         return clazz_instance;
     }
 
+    public Clazz getClazzDetailByRepo(int id) {
+        return repo.findClazzById(id);
+    }
+
     public void backToClazzList() {
         this.setView_Id(ID_CLASS_MANAGEMENT);
     }
@@ -115,7 +119,9 @@ public class ClazzBean implements Serializable {
     public void addStudentToTheClass() {
         StudentClass studentClass = new StudentClass();
         studentClass.setClazz(clazz_instance);
-        studentClazzRepository.save(studentClass);
+        clazz_instance.getListStudent().add(studentClass);
+        repo.update(clazz_instance.getId());
+        System.out.println(clazz_instance.getListStudent());
     }
 
     public Converter addStudentToTheClassConverter() {

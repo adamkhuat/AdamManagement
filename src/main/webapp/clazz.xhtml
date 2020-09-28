@@ -94,7 +94,7 @@
                                      p:placeholder="Student's ID"
                                      value="#{sc.student}">
                             <f:converter for="addStudentID" binding="#{clazzBean.addStudentToTheClassConverter()}"/>
-                            <f:ajax listener="#{clazzBean.saveStudentToTheClass(sc.id)}"
+                            <f:ajax listener="#{clazzBean.update(clazzBean.clazz_instance.id)}"
                                     event="change"
                                     execute="@this"
                                     render="@all"/>
