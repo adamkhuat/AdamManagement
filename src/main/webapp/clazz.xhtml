@@ -75,9 +75,6 @@
                                          action="#{clazzBean.addStudentToTheClass()}">
                             <f:ajax render="@all"/>
                         </h:commandButton>
-                        <h:commandButton value="Delete" action="#{clazzBean.delete(clazzBean.clazz_instance.id)}"
-                                         onclick="return confirm('Are you sure?')" immediate="true"/>
-
                         <h:commandButton value="Back" action="#{clazzBean.backToClazzList}">
                             <f:ajax render="@all"/>
                         </h:commandButton>
@@ -118,6 +115,14 @@
                             <f:converter binding="#{studentBean.dateOfBirthConverter()}"/>
                             <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
                         </h:outputText>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header"></f:facet>
+                        <h:commandButton id="btnDeleteStudentClass" value="DELETE"
+                                         action="#{clazzBean.deleteStudentClass(sc)}"
+                                         onclick="return confirm('Are you sure?')" immediate="true">
+                            <f:ajax render="@all"/>
+                        </h:commandButton>
                     </h:column>
                 </h:dataTable>
             </h:form>

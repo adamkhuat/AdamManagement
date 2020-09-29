@@ -15,6 +15,7 @@ import javax.faces.component.EditableValueHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
+import javax.faces.convert.ConverterException;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 import javax.inject.Inject;
@@ -105,7 +106,14 @@ public class ClazzBean implements Serializable {
         return new Converter() {
             @Override
             public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String s) {
-                int monitorId = Integer.parseInt(s);
+                int monitorId = 0;
+                try {
+                    monitorId = Integer.parseInt(s);
+                } catch (Exception e) {
+                    System.out.println(e);
+                    throw new ConverterException("Monitor's Id must be a number !");
+                }
+
                 return new StudentRepositoryImpl().findById(monitorId);
             }
 
@@ -156,8 +164,14 @@ public class ClazzBean implements Serializable {
         return new Converter() {
             @Override
             public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String s) {
-                int studentId = Integer.parseInt(s);
-                Student student = studentRepository.findById(studentId);
+                Student student = null;
+                try {
+                    int studentId = Integer.parseInt(s);
+                    student = studentRepository.findById(studentId);
+                } catch (Exception e) {
+                    System.out.println(e);
+                    throw new ConverterException("Student's ID must be a number !");
+                }
                 return student;
             }
 
@@ -198,4 +212,8 @@ public class ClazzBean implements Serializable {
         };
     }
 
+    public void deleteStudentClass(StudentClass studentClass) {
+        clazz_instance.getListStudent().remove(studentClass);
+        repo.update(clazz_instance.getId());
+    }
 }
