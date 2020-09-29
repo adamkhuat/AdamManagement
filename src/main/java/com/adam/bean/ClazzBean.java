@@ -10,12 +10,17 @@ import com.adam.repository.student.StudentRepositoryImpl;
 import com.adam.repository.studentClazz.StudentClazzRepository;
 
 import javax.enterprise.context.ConversationScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.component.EditableValueHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
+import javax.faces.validator.Validator;
+import javax.faces.validator.ValidatorException;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Named
@@ -92,10 +97,6 @@ public class ClazzBean implements Serializable {
         return clazz_instance;
     }
 
-    public Clazz getClazzDetailByRepo(int id) {
-        return repo.findClazzById(id);
-    }
-
     public void backToClazzList() {
         this.setView_Id(ID_CLASS_MANAGEMENT);
     }
@@ -112,6 +113,33 @@ public class ClazzBean implements Serializable {
             public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object o) {
                 Student monitor = (Student) o;
                 return String.valueOf(monitor.getId());
+            }
+        };
+    }
+
+    public Validator monitorValidator() {
+        return (facesContext, uiComponent, o) -> {
+            FacesMessage message = new FacesMessage();
+            message.setSeverity(FacesMessage.SEVERITY_ERROR);
+            Student student = (Student) o;
+            EditableValueHolder editableValueHolder = (EditableValueHolder) uiComponent;
+            if (student == null) {
+                editableValueHolder.resetValue();
+                message.setSummary("Don't have student's id");
+                throw new ValidatorException(message);
+            }
+            List<StudentClass> list = clazz_instance.getListStudent();
+            boolean isExist = false;
+            for (StudentClass sc : list) {
+                if (student.getId() == sc.getStudent().getId()) {
+                    isExist = true;
+                    break;
+                }
+            }
+            if (!isExist) {
+                editableValueHolder.resetValue();
+                message.setSummary("Monitor must be a member of the class");
+                throw new ValidatorException(message);
             }
         };
     }
@@ -141,7 +169,33 @@ public class ClazzBean implements Serializable {
         };
     }
 
-    public void saveStudentToTheClass(int id) {
-        studentClazzRepository.update(id);
+    public Validator addStudentClassValidator() {
+        return (facesContext, uiComponent, o) -> {
+            FacesMessage message = new FacesMessage();
+            message.setSeverity(FacesMessage.SEVERITY_ERROR);
+            Student student = (Student) o;
+            EditableValueHolder editableValueHolder = (EditableValueHolder) uiComponent;
+
+            if (student == null) {
+                editableValueHolder.resetValue();
+                message.setSummary("Don't have student");
+                throw new ValidatorException(message);
+            }
+            List<StudentClass> list = clazz_instance.getListStudent();
+            List<Student> studentList_notNull = new ArrayList<>();
+            for (StudentClass sc : list) {
+                if (sc.getStudent() != null) {
+                    studentList_notNull.add(sc.getStudent());
+                }
+            }
+            for (Student s : studentList_notNull) {
+                if (student.getId() == s.getId()) {
+                    editableValueHolder.resetValue();
+                    message.setSummary("Student alredy in the class");
+                    throw new ValidatorException(message);
+                }
+            }
+        };
     }
+
 }

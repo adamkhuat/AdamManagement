@@ -60,6 +60,7 @@
                     <h:inputText id="monitor"
                                  value="#{clazzBean.clazz_instance.monitor}"
                                  onkeypress="return event.keyCode !== 13">
+                        <f:validator for="monitor" binding="#{clazzBean.monitorValidator()}"/>
                         <f:converter for="monitor" binding="#{clazzBean.monitorConverter()}"/>
                         <f:ajax event="change"
                                 execute="@this"
@@ -77,7 +78,9 @@
                         <h:commandButton value="Delete" action="#{clazzBean.delete(clazzBean.clazz_instance.id)}"
                                          onclick="return confirm('Are you sure?')" immediate="true"/>
 
-                        <h:commandButton value="Back" action="#{clazzBean.backToClazzList}"/>
+                        <h:commandButton value="Back" action="#{clazzBean.backToClazzList}">
+                            <f:ajax render="@all"/>
+                        </h:commandButton>
                         <h:messages layout="formClazzDetail" errorStyle="color: red"/>
                     </f:facet>
 
@@ -93,6 +96,7 @@
                         <h:inputText id="addStudentID"
                                      p:placeholder="Student's ID"
                                      value="#{sc.student}">
+                            <f:validator for="addStudentID" binding="#{clazzBean.addStudentClassValidator()}"/>
                             <f:converter for="addStudentID" binding="#{clazzBean.addStudentToTheClassConverter()}"/>
                             <f:ajax listener="#{clazzBean.update(clazzBean.clazz_instance.id)}"
                                     event="change"

@@ -10,7 +10,7 @@ public class Clazz {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(name = "className")
     private String className;
