@@ -79,7 +79,6 @@ public class ClazzBean implements Serializable {
 
     public List<Clazz> getAllClazz() {
         List<Clazz> list = repo.getAllClazz();
-        System.out.println("CLASS SIZE" + list.size());
         return repo.getAllClazz();
     }
 
@@ -118,11 +117,15 @@ public class ClazzBean implements Serializable {
             @Override
             public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String s) {
                 int monitorId = 0;
+                EditableValueHolder editableValueHolder = (EditableValueHolder) uiComponent;
                 try {
                     monitorId = Integer.parseInt(s);
                 } catch (Exception e) {
                     System.out.println(e);
-                    throw new ConverterException("Monitor's Id must be a number !");
+                    editableValueHolder.resetValue();
+                    FacesMessage message = new FacesMessage("Monitor's Id must be a number !");
+                    message.setSeverity(FacesMessage.SEVERITY_ERROR);
+                    throw new ConverterException(message);
                 }
 
                 return new StudentRepositoryImpl().findById(monitorId);
@@ -148,6 +151,10 @@ public class ClazzBean implements Serializable {
                 throw new ValidatorException(message);
             }
             List<StudentClass> list = clazz_instance.getListStudent();
+            if (list == null) {
+                message.setSummary("Don't have any student in class");
+                throw new ValidatorException(message);
+            }
             boolean isExist = false;
             for (StudentClass sc : list) {
                 if (student.getId() == sc.getStudent().getId()) {
@@ -166,7 +173,12 @@ public class ClazzBean implements Serializable {
     public void addStudentToTheClass() {
         StudentClass studentClass = new StudentClass();
         studentClass.setClazz(clazz_instance);
-        clazz_instance.getListStudent().add(studentClass);
+        if (clazz_instance.getListStudent() != null) {
+            clazz_instance.getListStudent().add(studentClass);
+        } else {
+            clazz_instance.setListStudent(new ArrayList<>());
+            clazz_instance.getListStudent().add(studentClass);
+        }
         repo.update(clazz_instance.getId());
         System.out.println(clazz_instance.getListStudent());
     }
@@ -221,11 +233,6 @@ public class ClazzBean implements Serializable {
                 }
             }
         };
-    }
-
-    public void deleteStudentClass(StudentClass studentClass) {
-        clazz_instance.getListStudent().remove(studentClass);
-        repo.update(clazz_instance.getId());
     }
 
     private Map<Integer, Boolean> checked = new HashMap<>();

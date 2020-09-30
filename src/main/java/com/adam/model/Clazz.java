@@ -20,7 +20,7 @@ public class Clazz {
     @JoinColumn(name = "monitorId")
     private Student monitor;
 
-    @OneToMany(fetch = FetchType.EAGER,
+    @OneToMany(fetch = FetchType.LAZY,
             targetEntity = StudentClass.class,
             mappedBy = "clazz",
             cascade = CascadeType.ALL,

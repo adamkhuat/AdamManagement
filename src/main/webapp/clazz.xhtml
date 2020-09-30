@@ -33,6 +33,14 @@
                             <f:ajax render="@all"/>
                         </h:commandLink>
                     </h:column>
+                    <h:column>
+                        <h:commandButton value="Delete"
+                                         action="#{clazzBean.delete(clazz.id)}"
+                                         onclick="return confirm('Are you sure?')"
+                                         immediate="true">
+                            <f:ajax render="@all"/>
+                        </h:commandButton>
+                    </h:column>
                 </h:dataTable>
             </h:form>
 
@@ -125,6 +133,7 @@
                     <h:column>
                         <f:facet name="header">
                             <h:selectBooleanCheckbox id="check_all"
+                                                     label="All"
                                                      value="#{clazzBean.selectAll}"
                                                      valueChangeListener="#{clazzBean.checkAll()}">
                                 <f:ajax render="@all"/>
