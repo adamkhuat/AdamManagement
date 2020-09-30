@@ -75,6 +75,12 @@
                                          action="#{clazzBean.addStudentToTheClass()}">
                             <f:ajax render="@all"/>
                         </h:commandButton>
+                        <h:commandButton value="Remove Student"
+                                         action="#{clazzBean.removeStudentChecked()}"
+                                         onclick="return confirm('Are you sure?')"
+                                         immediate="true">
+                            <f:ajax render="@all"/>
+                        </h:commandButton>
                         <h:commandButton value="Back" action="#{clazzBean.backToClazzList}">
                             <f:ajax render="@all"/>
                         </h:commandButton>
@@ -117,12 +123,16 @@
                         </h:outputText>
                     </h:column>
                     <h:column>
-                        <f:facet name="header"></f:facet>
-                        <h:commandButton id="btnDeleteStudentClass" value="DELETE"
-                                         action="#{clazzBean.deleteStudentClass(sc)}"
-                                         onclick="return confirm('Are you sure?')" immediate="true">
-                            <f:ajax render="@all"/>
-                        </h:commandButton>
+                        <f:facet name="header">
+                            <h:selectBooleanCheckbox id="check_all"
+                                                     value="#{clazzBean.selectAll}"
+                                                     valueChangeListener="#{clazzBean.checkAll()}">
+                                <f:ajax render="@all"/>
+                            </h:selectBooleanCheckbox>
+                        </f:facet>
+                        <h:selectBooleanCheckbox id="del_studentCHB" value="#{clazzBean.checked[sc.id]}">
+                            <f:ajax execute="@this"/>
+                        </h:selectBooleanCheckbox>
                     </h:column>
                 </h:dataTable>
             </h:form>

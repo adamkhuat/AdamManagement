@@ -15,11 +15,16 @@ public class Clazz {
     @Column(name = "className")
     private String className;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY,
+            optional = false)
     @JoinColumn(name = "monitorId")
     private Student monitor;
 
-    @OneToMany(mappedBy = "clazz", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER,
+            targetEntity = StudentClass.class,
+            mappedBy = "clazz",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private List<StudentClass> listStudent;
 
     public int getId() {

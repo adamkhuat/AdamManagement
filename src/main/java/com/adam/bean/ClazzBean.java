@@ -22,7 +22,9 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Named
 @ConversationScoped
@@ -32,6 +34,15 @@ public class ClazzBean implements Serializable {
     private final String SHOW_CLASS_DETAIL = Constants.SHOW_CLASS_DETAIL;
     private String view_Id = ID_CLASS_MANAGEMENT;
     private Clazz clazz_instance;
+    private Boolean selectAll = false;
+
+    public Boolean getSelectAll() {
+        return selectAll;
+    }
+
+    public void setSelectAll(Boolean selectAll) {
+        this.selectAll = selectAll;
+    }
 
     public Clazz getClazz_instance() {
         return clazz_instance;
@@ -215,5 +226,50 @@ public class ClazzBean implements Serializable {
     public void deleteStudentClass(StudentClass studentClass) {
         clazz_instance.getListStudent().remove(studentClass);
         repo.update(clazz_instance.getId());
+    }
+
+    private Map<Integer, Boolean> checked = new HashMap<>();
+
+    public Map<Integer, Boolean> getChecked() {
+        return checked;
+    }
+
+    public void setChecked(Map<Integer, Boolean> checked) {
+        this.checked = checked;
+    }
+
+    public void checkAll() {
+        if (!selectAll) {
+            checked.clear();
+            for (StudentClass sc : clazz_instance.getListStudent()) {
+                checked.put(sc.getId(), true);
+            }
+        } else {
+            checked.clear();
+            for (StudentClass sc : clazz_instance.getListStudent()) {
+                checked.put(sc.getId(), false);
+            }
+        }
+
+    }
+
+    public void removeStudentChecked() {
+        List<StudentClass> listToDelete = new ArrayList<>();
+        try {
+            for (StudentClass sc : clazz_instance.getListStudent()) {
+                Boolean studentChecked = checked.get(sc.getId());
+                if (studentChecked != null && studentChecked) {
+                    listToDelete.add(sc);
+                }
+            }
+
+            for (StudentClass studentClass : listToDelete) {
+                clazz_instance.getListStudent().remove(studentClass);
+            }
+            repo.update(clazz_instance.getId());
+            checked.clear();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 }

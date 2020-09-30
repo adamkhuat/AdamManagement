@@ -4,6 +4,7 @@ import com.adam.constants.Constants;
 import com.adam.model.Student;
 import com.adam.repository.student.StudentRepository;
 
+import javax.annotation.PreDestroy;
 import javax.enterprise.context.ConversationScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -66,6 +67,11 @@ public class StudentBean implements Serializable {
         Student student = new Student();
         save(student);
         getStudentDetail(student.getId());
+    }
+
+    @PreDestroy
+    public void testDestroy() {
+        System.out.println("destroy");
     }
 
     public void save(Student student) {
@@ -180,5 +186,6 @@ public class StudentBean implements Serializable {
             }
         };
     }
+
 
 }

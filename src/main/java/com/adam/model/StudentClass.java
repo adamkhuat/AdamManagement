@@ -10,11 +10,12 @@ public class StudentClass {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER,
+            optional = false)
     @JoinColumn(name = "clazzId")
     private Clazz clazz;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "studentId")
     private Student student;
 
